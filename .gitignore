@@ -399,3 +399,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Local SQLite database
+opspilot.db
+opspilot.db-shm
+opspilot.db-wal
