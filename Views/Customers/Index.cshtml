@@ -1,0 +1,47 @@
+﻿@model List<OpsPilot.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="container mt-4">
+    <h1>Customers</h1>
+    <p class="text-muted">
+        View and manage customer information.
+    </p>
+    <a asp-action="Create" class="btn btn-primary mb-3">
+        Add Customer
+    </a>
+
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            No customers have been added yet.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td>@customer.Name</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.Phone</td>
+                        <td>@customer.Address</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
