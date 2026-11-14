@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpsPilot.Data;
 using OpsPilot.Models;
@@ -42,6 +43,79 @@ namespace OpsPilot.Controllers
             }
 
             return View(customer);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(
+            int id, [Bind("Id,Name,Email,Phone,Address")] Customer customer)
+        {
+            if (id != customer.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var existingCustomer = await _context.Customers.FindAsync(id);
+
+                if (existingCustomer == null)
+                {
+                    return NotFound();
+                }
+
+                existingCustomer.Name = customer.Name;
+                existingCustomer.Email = customer.Email;
+                existingCustomer.Phone = customer.Phone;
+                existingCustomer.Address = customer.Address;
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(customer);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
