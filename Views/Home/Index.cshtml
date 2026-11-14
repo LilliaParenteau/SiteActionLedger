@@ -2,7 +2,7 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
+<div class="mt-4">
     <h1>OpsPilot Dashboard</h1>
     <p class="text-muted">
         Manage customers, service requests, and work orders.
@@ -16,6 +16,11 @@
                     <p class="card-text">
                         View and manage customer information.
                     </p>
+                    <a asp-controller="Customers"
+                       asp-action="Index"
+                       class="btn btn-outline-primary">
+                        View Customers
+                    </a>
                 </div>
             </div>
         </div>

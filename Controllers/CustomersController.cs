@@ -112,6 +112,17 @@ namespace OpsPilot.Controllers
                 return NotFound();
             }
 
+            bool hasRequests = await _context.ServiceRequests
+                .AnyAsync(r => r.CustomerId == id);
+
+            if (hasRequests)
+            {
+                ModelState.AddModelError("",
+                    "This customer has existing service requests and cannot be deleted.");
+
+                return View("Delete", customer);
+            }
+
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
 

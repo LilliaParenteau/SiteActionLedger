@@ -1,0 +1,29 @@
+﻿
+using System.ComponentModel.DataAnnotations;
+
+namespace OpsPilot.Models
+{
+    public class ServiceRequest
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Title { get; set; } = "";
+
+        [Required]
+        [StringLength(500)]
+        public string Description { get; set; } = "";
+
+        public string Priority { get; set; } = "Normal";
+
+        public string Status { get; set; } = "Open";
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Range(1, int.MaxValue, ErrorMessage = "Select a customer.")]
+        public int CustomerId { get; set; }
+
+        public Customer? Customer { get; set; }
+    }
+}
