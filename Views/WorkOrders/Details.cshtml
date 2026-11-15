@@ -25,6 +25,13 @@
                     #@Model.ServiceRequestId
                 </dd>
 
+                <dt class="col-sm-3">Assigned Technician</dt>
+                <dd class="col-sm-9">
+                    @(Model.Technician == null
+                        ? "Unassigned"
+                        : $"{Model.Technician.Name} - {Model.Technician.Specialty}")
+                </dd>
+
                 <dt class="col-sm-3">Scheduled Date</dt>
                 <dd class="col-sm-9">
                     @(Model.ScheduledDate?.ToString("MM/dd/yyyy")
@@ -44,7 +51,14 @@
         </div>
     </div>
 
-    <a asp-action="Index" class="btn btn-secondary mt-3">
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-primary mt-3">
+        Edit Work Order
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary mt-3">
         Back to Work Orders
     </a>
 </div>

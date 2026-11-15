@@ -19,5 +19,9 @@ namespace OpsPilot.Models
 
         [StringLength(500)]
         public string Notes { get; set; } = "";
+
+        public int? TechnicianId { get; set; }
+
+        public Technician? Technician { get; set; }
     }
 }

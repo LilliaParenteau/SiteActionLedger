@@ -29,6 +29,7 @@
                         <th>Work Order</th>
                         <th>Service Request</th>
                         <th>Customer</th>
+                        <th>Technician</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -41,6 +42,9 @@
                             <td>#@order.Id</td>
                             <td>@order.ServiceRequest?.Title</td>
                             <td>@order.ServiceRequest?.Customer?.Name</td>
+                            <td>
+                                @(order.Technician?.Name ?? "Unassigned")
+                            </td>
                             <td>
                                 @(order.ScheduledDate?.ToString("MM/dd/yyyy")
                                     ?? "Not scheduled")

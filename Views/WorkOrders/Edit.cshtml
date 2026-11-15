@@ -25,6 +25,19 @@
         </div>
 
         <div class="mb-3">
+            <label asp-for="TechnicianId" class="form-label">
+                Assigned Technician
+            </label>
+            <select asp-for="TechnicianId"
+                    asp-items="ViewBag.Technicians"
+                    class="form-select">
+                <option value="">Unassigned</option>
+            </select>
+            <span asp-validation-for="TechnicianId"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
             <label asp-for="Status" class="form-label"></label>
             <select asp-for="Status" class="form-select">
                 <option value="Pending">Pending</option>

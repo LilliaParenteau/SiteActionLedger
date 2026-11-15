@@ -82,6 +82,31 @@ namespace OpsPilot.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
+            modelBuilder.Entity("OpsPilot.Models.Technician", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Technician");
+                });
+
             modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
                 {
                     b.Property<int>("Id")
@@ -103,10 +128,15 @@ namespace OpsPilot.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TechnicianId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceRequestId")
                         .IsUnique();
+
+                    b.HasIndex("TechnicianId");
 
                     b.ToTable("WorkOrders");
                 });
@@ -130,7 +160,13 @@ namespace OpsPilot.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("OpsPilot.Models.Technician", "Technician")
+                        .WithMany()
+                        .HasForeignKey("TechnicianId");
+
                     b.Navigation("ServiceRequest");
+
+                    b.Navigation("Technician");
                 });
 #pragma warning restore 612, 618
         }

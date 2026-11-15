@@ -21,6 +21,7 @@ namespace OpsPilot.Controllers
             var workOrders = await _context.WorkOrders
                 .Include(w => w.ServiceRequest)
                 .ThenInclude(r => r!.Customer)
+                .Include(w => w.Technician)
                 .OrderByDescending(w => w.Id)
                 .ToListAsync();
 
@@ -32,6 +33,7 @@ namespace OpsPilot.Controllers
             var workOrder = await _context.WorkOrders
                 .Include(w => w.ServiceRequest)
                 .ThenInclude(r => r!.Customer)
+                .Include(w => w.Technician)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workOrder == null)
@@ -98,6 +100,8 @@ namespace OpsPilot.Controllers
                 return NotFound();
             }
 
+            await LoadTechnicians(workOrder.TechnicianId);
+
             return View(workOrder);
         }
 
@@ -116,7 +120,8 @@ namespace OpsPilot.Controllers
             await TryUpdateModelAsync(workOrder, "",
                 w => w.ScheduledDate,
                 w => w.Status,
-                w => w.Notes);
+                w => w.Notes,
+                w => w.TechnicianId);
 
             if (workOrder.Status != "Pending" &&
                 workOrder.Status != "In Progress" &&
@@ -125,8 +130,21 @@ namespace OpsPilot.Controllers
                 ModelState.AddModelError("Status", "Select a valid status.");
             }
 
+            if (workOrder.TechnicianId.HasValue)
+            {
+                bool technicianExists = await _context.Technicians
+                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
+
+                if (!technicianExists)
+                {
+                    ModelState.AddModelError("TechnicianId",
+                        "Select a valid technician.");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
+                await LoadTechnicians(workOrder.TechnicianId);
                 return View("Edit", workOrder);
             }
 
@@ -159,6 +177,21 @@ namespace OpsPilot.Controllers
 
             ViewBag.ServiceRequests = new SelectList(
                 availableRequests, "Id", "DisplayName", selectedId);
+        }
+
+        private async Task LoadTechnicians(int? selectedId = null)
+        {
+            var technicians = await _context.Technicians
+                .OrderBy(t => t.Name)
+                .Select(t => new
+                {
+                    t.Id,
+                    DisplayName = $"{t.Name} - {t.Specialty}"
+                })
+                .ToListAsync();
+
+            ViewBag.Technicians = new SelectList(
+                technicians, "Id", "DisplayName", selectedId);
         }
     }
 }
