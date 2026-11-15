@@ -82,6 +82,35 @@ namespace OpsPilot.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
+            modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ScheduledDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ServiceRequestId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceRequestId")
+                        .IsUnique();
+
+                    b.ToTable("WorkOrders");
+                });
+
             modelBuilder.Entity("OpsPilot.Models.ServiceRequest", b =>
                 {
                     b.HasOne("OpsPilot.Models.Customer", "Customer")
@@ -91,6 +120,17 @@ namespace OpsPilot.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
+                {
+                    b.HasOne("OpsPilot.Models.ServiceRequest", "ServiceRequest")
+                        .WithOne()
+                        .HasForeignKey("OpsPilot.Models.WorkOrder", "ServiceRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ServiceRequest");
                 });
 #pragma warning restore 612, 618
         }
