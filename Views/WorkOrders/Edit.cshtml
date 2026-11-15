@@ -1,0 +1,60 @@
+﻿@model OpsPilot.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Edit Work Order";
+}
+
+<div class="mt-4">
+    <h1>Edit Work Order #@Model.Id</h1>
+    <p class="text-muted">
+        Update the scheduling and progress of this job.
+    </p>
+
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="ScheduledDate" class="form-label">
+                Scheduled Date
+            </label>
+            <input asp-for="ScheduledDate"
+                   type="date"
+                   class="form-control" />
+            <span asp-validation-for="ScheduledDate"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label"></label>
+            <select asp-for="Status" class="form-select">
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label">
+                Job Notes
+            </label>
+            <textarea asp-for="Notes"
+                      class="form-control"
+                      rows="4"></textarea>
+            <span asp-validation-for="Notes"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Changes
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

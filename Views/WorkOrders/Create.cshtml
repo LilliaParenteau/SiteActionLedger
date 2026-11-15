@@ -1,0 +1,63 @@
+﻿@model OpsPilot.Models.WorkOrder
+
+@{
+    ViewData["Title"] = "Add Work Order";
+}
+
+<div class="mt-4">
+    <h1>Add Work Order</h1>
+    <p class="text-muted">
+        Create a work order from an existing service request.
+    </p>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="ServiceRequestId" class="form-label">
+                Service Request
+            </label>
+            <select asp-for="ServiceRequestId"
+                    asp-items="ViewBag.ServiceRequests"
+                    class="form-select">
+                <option value="">Select a service request</option>
+            </select>
+            <span asp-validation-for="ServiceRequestId"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ScheduledDate" class="form-label">
+                Scheduled Date
+            </label>
+            <input asp-for="ScheduledDate"
+                   type="date"
+                   class="form-control" />
+            <span asp-validation-for="ScheduledDate"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label">
+                Job Notes
+            </label>
+            <textarea asp-for="Notes"
+                      class="form-control"
+                      rows="4"></textarea>
+            <span asp-validation-for="Notes"
+                  class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Work Order
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

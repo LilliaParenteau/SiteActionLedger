@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OpsPilot.Models;
 
 namespace OpsPilot.Data
@@ -15,12 +14,20 @@ namespace OpsPilot.Data
 
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
 
+        public DbSet<WorkOrder> WorkOrders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ServiceRequest>()
                 .HasOne(s => s.Customer)
                 .WithMany()
                 .HasForeignKey(s => s.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkOrder>()
+                .HasOne(w => w.ServiceRequest)
+                .WithOne()
+                .HasForeignKey<WorkOrder>(w => w.ServiceRequestId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

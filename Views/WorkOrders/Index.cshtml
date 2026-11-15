@@ -1,0 +1,68 @@
+﻿@model List<OpsPilot.Models.WorkOrder>
+
+@{
+    ViewData["Title"] = "Work Orders";
+}
+
+<div class="mt-4">
+    <h1>Work Orders</h1>
+    <p class="text-muted">
+        View and manage scheduled service jobs.
+    </p>
+
+    <a asp-action="Create" class="btn btn-primary mb-3">
+        Add Work Order
+    </a>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info mt-4">
+            No work orders have been created yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Work Order</th>
+                        <th>Service Request</th>
+                        <th>Customer</th>
+                        <th>Scheduled Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.ServiceRequest?.Title</td>
+                            <td>@order.ServiceRequest?.Customer?.Name</td>
+                            <td>
+                                @(order.ScheduledDate?.ToString("MM/dd/yyyy")
+                                    ?? "Not scheduled")
+                            </td>
+                            <td>@order.Status</td>
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@order.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@order.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
