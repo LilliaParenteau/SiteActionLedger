@@ -1,20 +1,20 @@
-﻿@model List<OpsPilot.Models.Customer>
+﻿@model IEnumerable<OpsPilot.Models.Customer>
 
 @{
     ViewData["Title"] = "Customers";
 }
 
-<div class="container mt-4">
+<div class="mt-4">
     <h1>Customers</h1>
     <p class="text-muted">
         View and manage customer information.
     </p>
 
-    <a asp-action="Create" class="btn btn-primary mb-3">
+    <a asp-action="Create" class="btn btn-primary mb-4">
         Add Customer
     </a>
 
-    @if (Model.Count == 0)
+    @if (!Model.Any())
     {
         <div class="alert alert-info">
             No customers have been added yet.
@@ -23,7 +23,7 @@
     else
     {
         <div class="table-responsive">
-            <table class="table table-striped mt-4">
+            <table class="table table-hover management-table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -33,14 +33,27 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var customer in Model)
                     {
                         <tr>
                             <td>@customer.Name</td>
                             <td>@customer.Email</td>
-                            <td>@customer.Phone</td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(customer.Phone))
+                                {
+                                    @customer.Phone
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </td>
+
                             <td>@customer.Address</td>
+
                             <td>
                                 <a asp-action="Edit"
                                    asp-route-id="@customer.Id"

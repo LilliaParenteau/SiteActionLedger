@@ -1,0 +1,51 @@
+﻿@model IEnumerable<OpsPilot.Models.Technician>
+
+@{
+    ViewData["Title"] = "Technicians";
+}
+
+<div class="mt-4">
+    <h1>Technicians</h1>
+    <p class="text-muted">
+        View technicians and their areas of specialization.
+    </p>
+
+    <a asp-action="Create" class="btn btn-primary mb-4">
+        Add Technician
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No technicians have been added yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover management-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Specialty</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var technician in Model)
+                    {
+                        <tr>
+                            <td>@technician.Name</td>
+                            <td>@technician.Specialty</td>
+                            <td>
+                                @(string.IsNullOrEmpty(technician.Phone)
+                                    ? "Not provided"
+                                    : technician.Phone)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

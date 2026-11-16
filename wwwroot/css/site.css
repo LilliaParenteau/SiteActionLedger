@@ -29,3 +29,80 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+/* Dashboard */
+.dashboard-page h1 {
+    font-weight: 700;
+}
+
+.dashboard-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #426da8;
+}
+
+.dashboard-card {
+    border: 1px solid #e0e6ed;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .dashboard-card .card-body {
+        padding: 24px;
+    }
+
+    .dashboard-card h6 {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+.dashboard-number {
+    font-size: 40px;
+    font-weight: 700;
+    color: #234e87;
+    margin: 15px 0 24px;
+}
+
+.dashboard-card .btn {
+    align-self: flex-start;
+    border-radius: 6px;
+}
+
+/* Management tables */
+.management-table {
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+    .management-table th {
+        background-color: #f4f7fb;
+        color: #43536b;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 14px;
+    }
+
+    .management-table td {
+        padding: 14px;
+    }
+
+    .management-table .badge {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 10px;
+        border-radius: 6px;
+    }
+
+    .management-table .btn {
+        margin-right: 4px;
+    }
