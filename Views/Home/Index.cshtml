@@ -1,21 +1,21 @@
-﻿@{
+﻿@model OpsPilot.Models.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
 <div class="mt-4">
     <h1>OpsPilot Dashboard</h1>
     <p class="text-muted">
-        Manage customers, service requests, and work orders.
+        Overview of customers, service requests, and work orders.
     </p>
 
     <div class="row mt-4">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 col-xl-3 mb-3">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Customers</h5>
-                    <p class="card-text">
-                        View and manage customer information.
-                    </p>
+                    <h6 class="text-muted">Total Customers</h6>
+                    <h2 class="my-3">@Model.CustomerCount</h2>
                     <a asp-controller="Customers"
                        asp-action="Index"
                        class="btn btn-outline-primary">
@@ -25,13 +25,11 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 col-xl-3 mb-3">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Service Requests</h5>
-                    <p class="card-text">
-                        Track incoming service requests.
-                    </p>
+                    <h6 class="text-muted">Open Requests</h6>
+                    <h2 class="my-3">@Model.OpenRequestCount</h2>
                     <a asp-controller="ServiceRequests"
                        asp-action="Index"
                        class="btn btn-outline-primary">
@@ -41,17 +39,29 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 col-xl-3 mb-3">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Work Orders</h5>
-                    <p class="card-text">
-                        Organize and monitor active jobs.
-                    </p>
+                    <h6 class="text-muted">Active Work Orders</h6>
+                    <h2 class="my-3">@Model.ActiveWorkOrderCount</h2>
                     <a asp-controller="WorkOrders"
                        asp-action="Index"
                        class="btn btn-outline-primary">
                         View Work Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Technicians</h6>
+                    <h2 class="my-3">@Model.TechnicianCount</h2>
+                    <a asp-controller="Technicians"
+                       asp-action="Index"
+                       class="btn btn-outline-primary">
+                        View Technicians
                     </a>
                 </div>
             </div>
