@@ -15,16 +15,36 @@ namespace OpsPilot.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, string? status)
         {
-            var workOrders = await _context.WorkOrders
+            var workOrders = _context.WorkOrders
                 .Include(w => w.ServiceRequest)
                 .ThenInclude(r => r!.Customer)
                 .Include(w => w.Technician)
-                .OrderByDescending(w => w.Id)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(workOrders);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                workOrders = workOrders.Where(w =>
+                    w.ServiceRequest!.Title.Contains(search) ||
+                    w.ServiceRequest.Customer!.Name.Contains(search) ||
+                    (w.Technician != null &&
+                     w.Technician.Name.Contains(search)));
+            }
+
+            if (status == "Pending" ||
+                status == "In Progress" ||
+                status == "Completed")
+            {
+                workOrders = workOrders.Where(w => w.Status == status);
+            }
+
+            ViewBag.Search = search;
+            ViewBag.Status = status;
+
+            return View(await workOrders
+                .OrderByDescending(w => w.Id)
+                .ToListAsync());
         }
 
         public async Task<IActionResult> Details(int id)

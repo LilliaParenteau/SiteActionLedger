@@ -15,14 +15,42 @@ namespace OpsPilot.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string? search, string? status, string? priority)
         {
-            var requests = await _context.ServiceRequests
+            var requests = _context.ServiceRequests
                 .Include(r => r.Customer)
-                .OrderByDescending(r => r.CreatedAt)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(requests);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                requests = requests.Where(r =>
+                    r.Title.Contains(search) ||
+                    r.Description.Contains(search) ||
+                    r.Customer!.Name.Contains(search));
+            }
+
+            if (status == "Open" ||
+                status == "In Progress" ||
+                status == "Completed")
+            {
+                requests = requests.Where(r => r.Status == status);
+            }
+
+            if (priority == "Low" ||
+                priority == "Normal" ||
+                priority == "High")
+            {
+                requests = requests.Where(r => r.Priority == priority);
+            }
+
+            ViewBag.Search = search;
+            ViewBag.Status = status;
+            ViewBag.Priority = priority;
+
+            return View(await requests
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync());
         }
 
         public async Task<IActionResult> Details(int id)
@@ -59,7 +87,8 @@ namespace OpsPilot.Controllers
                 request.Priority != "Normal" &&
                 request.Priority != "High")
             {
-                ModelState.AddModelError("Priority", "Select a valid priority.");
+                ModelState.AddModelError(
+                    "Priority", "Select a valid priority.");
             }
 
             bool customerExists = await _context.Customers
@@ -67,7 +96,8 @@ namespace OpsPilot.Controllers
 
             if (!customerExists)
             {
-                ModelState.AddModelError("CustomerId", "Select a valid customer.");
+                ModelState.AddModelError(
+                    "CustomerId", "Select a valid customer.");
             }
 
             if (!ModelState.IsValid)
@@ -126,14 +156,16 @@ namespace OpsPilot.Controllers
                 request.Priority != "Normal" &&
                 request.Priority != "High")
             {
-                ModelState.AddModelError("Priority", "Select a valid priority.");
+                ModelState.AddModelError(
+                    "Priority", "Select a valid priority.");
             }
 
             if (request.Status != "Open" &&
                 request.Status != "In Progress" &&
                 request.Status != "Completed")
             {
-                ModelState.AddModelError("Status", "Select a valid status.");
+                ModelState.AddModelError(
+                    "Status", "Select a valid status.");
             }
 
             if (!updated || !ModelState.IsValid)
@@ -152,8 +184,11 @@ namespace OpsPilot.Controllers
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
-            ViewBag.Customers = new SelectList(customers, "Id", "Name");
-            ViewBag.CustomerId = new SelectList(customers, "Id", "Name");
+            ViewBag.Customers = new SelectList(
+                customers, "Id", "Name");
+
+            ViewBag.CustomerId = new SelectList(
+                customers, "Id", "Name");
         }
     }
 }
