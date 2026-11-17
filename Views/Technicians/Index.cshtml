@@ -29,18 +29,40 @@
                         <th>Name</th>
                         <th>Specialty</th>
                         <th>Phone</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var technician in Model)
                     {
                         <tr>
                             <td>@technician.Name</td>
                             <td>@technician.Specialty</td>
+
                             <td>
-                                @(string.IsNullOrEmpty(technician.Phone)
-                                    ? "Not provided"
-                                    : technician.Phone)
+                                @if (!string.IsNullOrEmpty(technician.Phone))
+                                {
+                                    @technician.Phone
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not provided</span>
+                                }
+                            </td>
+
+                            <td>
+                                <a asp-action="Edit"
+                                   asp-route-id="@technician.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@technician.Id"
+                                   class="btn btn-sm btn-outline-danger">
+                                    Delete
+                                </a>
                             </td>
                         </tr>
                     }
