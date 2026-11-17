@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OpsPilot.Data;
@@ -55,53 +54,57 @@ namespace OpsPilot.Controllers
         public async Task<IActionResult> Create(
             [Bind("ServiceRequestId,ScheduledDate,Notes")] WorkOrder workOrder)
         {
-            bool requestExists = await _context.ServiceRequests
-                .AnyAsync(r => r.Id == workOrder.ServiceRequestId);
+            var request = await _context.ServiceRequests
+                .FindAsync(workOrder.ServiceRequestId);
 
-            if (!requestExists)
+            if (request == null)
             {
-                ModelState.AddModelError("ServiceRequestId",
+                ModelState.AddModelError(
+                    "ServiceRequestId",
                     "Select a valid service request.");
             }
-            else
-            {
-                bool alreadyAssigned = await _context.WorkOrders
-                    .AnyAsync(w => w.ServiceRequestId == workOrder.ServiceRequestId);
 
-                if (alreadyAssigned)
-                {
-                    ModelState.AddModelError("ServiceRequestId",
-                        "This service request already has a work order.");
-                }
+            bool alreadyAssigned = await _context.WorkOrders
+                .AnyAsync(w => w.ServiceRequestId == workOrder.ServiceRequestId);
+
+            if (alreadyAssigned)
+            {
+                ModelState.AddModelError(
+                    "ServiceRequestId",
+                    "This request already has a work order.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                workOrder.Status = "Pending";
-                workOrder.Notes ??= "";
-
-                _context.WorkOrders.Add(workOrder);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                await LoadServiceRequests();
+                return View(workOrder);
             }
 
-            await LoadServiceRequests(workOrder.ServiceRequestId);
-            return View(workOrder);
+            workOrder.Status = "Pending";
+            workOrder.Notes ??= "";
+
+            request!.Status = "Open";
+
+            _context.WorkOrders.Add(workOrder);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var workOrder = await _context.WorkOrders.FindAsync(id);
+            var workOrder = await _context.WorkOrders
+                .Include(w => w.ServiceRequest)
+                .ThenInclude(r => r!.Customer)
+                .Include(w => w.Technician)
+                .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workOrder == null)
             {
                 return NotFound();
             }
 
-            await LoadTechnicians(workOrder.TechnicianId);
-
+            await LoadTechnicians();
             return View(workOrder);
         }
 
@@ -110,24 +113,33 @@ namespace OpsPilot.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(int id)
         {
-            var workOrder = await _context.WorkOrders.FindAsync(id);
+            var workOrder = await _context.WorkOrders
+                .Include(w => w.ServiceRequest)
+                .ThenInclude(r => r!.Customer)
+                .Include(w => w.Technician)
+                .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workOrder == null)
             {
                 return NotFound();
             }
 
-            await TryUpdateModelAsync(workOrder, "",
+            bool updated = await TryUpdateModelAsync(
+                workOrder,
+                "",
                 w => w.ScheduledDate,
                 w => w.Status,
                 w => w.Notes,
-                w => w.TechnicianId);
+                w => w.TechnicianId
+            );
 
             if (workOrder.Status != "Pending" &&
                 workOrder.Status != "In Progress" &&
                 workOrder.Status != "Completed")
             {
-                ModelState.AddModelError("Status", "Select a valid status.");
+                ModelState.AddModelError(
+                    "Status",
+                    "Select a valid status.");
             }
 
             if (workOrder.TechnicianId.HasValue)
@@ -137,61 +149,62 @@ namespace OpsPilot.Controllers
 
                 if (!technicianExists)
                 {
-                    ModelState.AddModelError("TechnicianId",
+                    ModelState.AddModelError(
+                        "TechnicianId",
                         "Select a valid technician.");
                 }
             }
 
-            if (!ModelState.IsValid)
+            if (!updated || !ModelState.IsValid)
             {
-                await LoadTechnicians(workOrder.TechnicianId);
+                await LoadTechnicians();
                 return View("Edit", workOrder);
             }
 
-            workOrder.Notes ??= "";
+            if (workOrder.ServiceRequest != null)
+            {
+                if (workOrder.Status == "Pending")
+                {
+                    workOrder.ServiceRequest.Status = "Open";
+                }
+                else if (workOrder.Status == "In Progress")
+                {
+                    workOrder.ServiceRequest.Status = "In Progress";
+                }
+                else if (workOrder.Status == "Completed")
+                {
+                    workOrder.ServiceRequest.Status = "Completed";
+                }
+            }
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id = workOrder.Id });
+            return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadServiceRequests(int? selectedId = null)
+        private async Task LoadServiceRequests()
         {
             var assignedIds = await _context.WorkOrders
                 .Select(w => w.ServiceRequestId)
                 .ToListAsync();
 
             var requests = await _context.ServiceRequests
-                .Include(r => r.Customer)
+                .Where(r => !assignedIds.Contains(r.Id))
                 .OrderBy(r => r.Title)
                 .ToListAsync();
 
-            var availableRequests = requests
-                .Where(r => !assignedIds.Contains(r.Id))
-                .Select(r => new
-                {
-                    r.Id,
-                    DisplayName = $"{r.Title} - {r.Customer?.Name}"
-                })
-                .ToList();
-
             ViewBag.ServiceRequests = new SelectList(
-                availableRequests, "Id", "DisplayName", selectedId);
+                requests, "Id", "Title");
         }
 
-        private async Task LoadTechnicians(int? selectedId = null)
+        private async Task LoadTechnicians()
         {
             var technicians = await _context.Technicians
                 .OrderBy(t => t.Name)
-                .Select(t => new
-                {
-                    t.Id,
-                    DisplayName = $"{t.Name} - {t.Specialty}"
-                })
                 .ToListAsync();
 
             ViewBag.Technicians = new SelectList(
-                technicians, "Id", "DisplayName", selectedId);
+                technicians, "Id", "Name");
         }
     }
 }

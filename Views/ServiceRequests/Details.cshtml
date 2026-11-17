@@ -6,16 +6,17 @@
 
 <div class="mt-4">
     <h1>Service Request Details</h1>
-    <p class="text-muted">View the information for this request.</p>
+    <p class="text-muted">
+        View request information and associated work orders.
+    </p>
 
     <div class="card mt-4">
         <div class="card-body">
-            <h4 class="card-title">@Model.Title</h4>
+            <h4>@Model.Title</h4>
 
-            <dl class="row mt-4">
-                <dt class="col-sm-3">Request ID</dt>
-                <dd class="col-sm-9">@Model.Id</dd>
+            <hr />
 
+            <dl class="row">
                 <dt class="col-sm-3">Customer</dt>
                 <dd class="col-sm-9">@Model.Customer?.Name</dd>
 
@@ -28,15 +29,54 @@
                 <dt class="col-sm-3">Status</dt>
                 <dd class="col-sm-9">@Model.Status</dd>
 
-                <dt class="col-sm-3">Created</dt>
+                <dt class="col-sm-3">Date Created</dt>
                 <dd class="col-sm-9">
                     @Model.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
                 </dd>
             </dl>
+
+            <hr />
+
+            <h5>Associated Work Order</h5>
+
+            @if (ViewBag.WorkOrderId != null)
+            {
+                <p class="text-muted">
+                    A work order has been created for this request.
+                </p>
+
+                <a asp-controller="WorkOrders"
+                   asp-action="Details"
+                   asp-route-id="@ViewBag.WorkOrderId"
+                   class="btn btn-outline-primary">
+                    View Work Order
+                </a>
+            }
+            else
+            {
+                <p class="text-muted">
+                    No work order has been created for this request.
+                </p>
+
+                <a asp-controller="WorkOrders"
+                   asp-action="Create"
+                   class="btn btn-outline-primary">
+                    Create Work Order
+                </a>
+            }
         </div>
     </div>
 
-    <a asp-action="Index" class="btn btn-secondary mt-3">
-        Back to Requests
-    </a>
+    <div class="mt-3">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Edit Request
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Requests
+        </a>
+    </div>
 </div>

@@ -36,64 +36,60 @@ namespace OpsPilot.Controllers
                 return NotFound();
             }
 
+            ViewBag.WorkOrderId = await _context.WorkOrders
+                .Where(w => w.ServiceRequestId == id)
+                .Select(w => (int?)w.Id)
+                .FirstOrDefaultAsync();
+
             return View(request);
         }
 
         public async Task<IActionResult> Create()
         {
-            ViewBag.Customers = new SelectList(
-                await _context.Customers
-                    .OrderBy(c => c.Name)
-                    .ToListAsync(),
-                "Id", "Name");
-
+            await LoadCustomers();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Title,Description,Priority,CustomerId")] ServiceRequest serviceRequest)
+            [Bind("Title,Description,Priority,CustomerId")] ServiceRequest request)
         {
-            if (serviceRequest.Priority != "Low" &&
-                serviceRequest.Priority != "Normal" &&
-                serviceRequest.Priority != "High")
+            if (request.Priority != "Low" &&
+                request.Priority != "Normal" &&
+                request.Priority != "High")
             {
                 ModelState.AddModelError("Priority", "Select a valid priority.");
             }
 
             bool customerExists = await _context.Customers
-                .AnyAsync(c => c.Id == serviceRequest.CustomerId);
+                .AnyAsync(c => c.Id == request.CustomerId);
 
             if (!customerExists)
             {
                 ModelState.AddModelError("CustomerId", "Select a valid customer.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                serviceRequest.Status = "Open";
-                serviceRequest.CreatedAt = DateTime.UtcNow;
-
-                _context.ServiceRequests.Add(serviceRequest);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                await LoadCustomers();
+                return View(request);
             }
 
-            ViewBag.Customers = new SelectList(
-                await _context.Customers
-                    .OrderBy(c => c.Name)
-                    .ToListAsync(),
-                "Id", "Name", serviceRequest.CustomerId);
+            request.Status = "Open";
+            request.CreatedAt = DateTime.UtcNow;
 
-            return View(serviceRequest);
+            _context.ServiceRequests.Add(request);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var request = await _context.ServiceRequests.FindAsync(id);
+            var request = await _context.ServiceRequests
+                .Include(r => r.Customer)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (request == null)
             {
@@ -108,18 +104,23 @@ namespace OpsPilot.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(int id)
         {
-            var request = await _context.ServiceRequests.FindAsync(id);
+            var request = await _context.ServiceRequests
+                .Include(r => r.Customer)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (request == null)
             {
                 return NotFound();
             }
 
-            await TryUpdateModelAsync(request, "",
+            bool updated = await TryUpdateModelAsync(
+                request,
+                "",
                 r => r.Title,
                 r => r.Description,
                 r => r.Priority,
-                r => r.Status);
+                r => r.Status
+            );
 
             if (request.Priority != "Low" &&
                 request.Priority != "Normal" &&
@@ -135,14 +136,24 @@ namespace OpsPilot.Controllers
                 ModelState.AddModelError("Status", "Select a valid status.");
             }
 
-            if (!ModelState.IsValid)
+            if (!updated || !ModelState.IsValid)
             {
                 return View("Edit", request);
             }
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id = request.Id });
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task LoadCustomers()
+        {
+            var customers = await _context.Customers
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            ViewBag.Customers = new SelectList(customers, "Id", "Name");
+            ViewBag.CustomerId = new SelectList(customers, "Id", "Name");
         }
     }
 }

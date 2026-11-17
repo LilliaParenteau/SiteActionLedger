@@ -42,7 +42,13 @@
                         <tr>
                             <td>#@order.Id</td>
 
-                            <td>@order.ServiceRequest?.Title</td>
+                            <td>
+                                <a asp-controller="ServiceRequests"
+                                   asp-action="Details"
+                                   asp-route-id="@order.ServiceRequestId">
+                                    @order.ServiceRequest?.Title
+                                </a>
+                            </td>
 
                             <td>@order.ServiceRequest?.Customer?.Name</td>
 
