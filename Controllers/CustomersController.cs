@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpsPilot.Data;
 using OpsPilot.Models;
@@ -15,13 +14,24 @@ namespace OpsPilot.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var customers = await _context.Customers
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            var customers = _context.Customers.AsQueryable();
 
-            return View(customers);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                customers = customers.Where(c =>
+                    c.Name.Contains(search) ||
+                    c.Email.Contains(search) ||
+                    c.Phone.Contains(search) ||
+                    c.Address.Contains(search));
+            }
+
+            ViewBag.Search = search;
+
+            return View(await customers
+                .OrderBy(c => c.Name)
+                .ToListAsync());
         }
 
         public IActionResult Create()
@@ -34,15 +44,15 @@ namespace OpsPilot.Controllers
         public async Task<IActionResult> Create(
             [Bind("Name,Email,Phone,Address")] Customer customer)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Customers.Add(customer);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                return View(customer);
             }
 
-            return View(customer);
+            _context.Customers.Add(customer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -58,35 +68,34 @@ namespace OpsPilot.Controllers
         }
 
         [HttpPost]
+        [ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id, [Bind("Id,Name,Email,Phone,Address")] Customer customer)
+        public async Task<IActionResult> EditPost(int id)
         {
-            if (id != customer.Id)
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            bool updated = await TryUpdateModelAsync(
+                customer,
+                "",
+                c => c.Name,
+                c => c.Email,
+                c => c.Phone,
+                c => c.Address
+            );
+
+            if (!updated || !ModelState.IsValid)
             {
-                var existingCustomer = await _context.Customers.FindAsync(id);
-
-                if (existingCustomer == null)
-                {
-                    return NotFound();
-                }
-
-                existingCustomer.Name = customer.Name;
-                existingCustomer.Email = customer.Email;
-                existingCustomer.Phone = customer.Phone;
-                existingCustomer.Address = customer.Address;
-
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                return View("Edit", customer);
             }
 
-            return View(customer);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -101,7 +110,8 @@ namespace OpsPilot.Controllers
             return View(customer);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

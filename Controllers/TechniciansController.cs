@@ -14,13 +14,23 @@ namespace OpsPilot.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var technicians = await _context.Technicians
-                .OrderBy(t => t.Name)
-                .ToListAsync();
+            var technicians = _context.Technicians.AsQueryable();
 
-            return View(technicians);
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                technicians = technicians.Where(t =>
+                    t.Name.Contains(search) ||
+                    t.Specialty.Contains(search) ||
+                    t.Phone.Contains(search));
+            }
+
+            ViewBag.Search = search;
+
+            return View(await technicians
+                .OrderBy(t => t.Name)
+                .ToListAsync());
         }
 
         public IActionResult Create()
