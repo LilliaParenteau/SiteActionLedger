@@ -1,0 +1,125 @@
+﻿@model OpsPilot.Models.Technician
+
+@{
+    ViewData["Title"] = "Technician Details";
+
+    var workOrders = ViewBag.WorkOrders
+        as List<OpsPilot.Models.WorkOrder>
+        ?? new List<OpsPilot.Models.WorkOrder>();
+}
+
+<div class="mt-4">
+    <h1>Technician Details</h1>
+    <p class="text-muted">
+        View technician information and assigned work orders.
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>@Model.Name</h4>
+
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">Specialty</dt>
+                <dd class="col-sm-9">@Model.Specialty</dd>
+
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9">
+                    @(string.IsNullOrEmpty(Model.Phone)
+                        ? "Not provided"
+                        : Model.Phone)
+                </dd>
+
+                <dt class="col-sm-3">Assigned Work Orders</dt>
+                <dd class="col-sm-9">@workOrders.Count</dd>
+            </dl>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-outline-primary">
+                Edit Technician
+            </a>
+        </div>
+    </div>
+
+    <h4>Assigned Work Orders</h4>
+
+    @if (!workOrders.Any())
+    {
+        <div class="alert alert-info mt-3">
+            This technician has no assigned work orders.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-3">
+            <table class="table table-hover management-table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Service Request</th>
+                        <th>Customer</th>
+                        <th>Scheduled Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var order in workOrders)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+
+                            <td>@order.ServiceRequest?.Title</td>
+
+                            <td>@order.ServiceRequest?.Customer?.Name</td>
+
+                            <td>
+                                @(order.ScheduledDate?.ToString("MM/dd/yyyy")
+                                    ?? "Not Scheduled")
+                            </td>
+
+                            <td>
+                                @if (order.Status == "Completed")
+                                {
+                                    <span class="badge bg-success">
+                                        Completed
+                                    </span>
+                                }
+                                else if (order.Status == "In Progress")
+                                {
+                                    <span class="badge bg-primary">
+                                        In Progress
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        Pending
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                <a asp-controller="WorkOrders"
+                                   asp-action="Details"
+                                   asp-route-id="@order.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            Back to Technicians
+        </a>
+    </div>
+</div>

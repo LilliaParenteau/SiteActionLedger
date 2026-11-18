@@ -33,6 +33,25 @@ namespace OpsPilot.Controllers
                 .ToListAsync());
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var technician = await _context.Technicians.FindAsync(id);
+
+            if (technician == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.WorkOrders = await _context.WorkOrders
+                .Include(w => w.ServiceRequest)
+                .ThenInclude(r => r!.Customer)
+                .Where(w => w.TechnicianId == id)
+                .OrderByDescending(w => w.Id)
+                .ToListAsync();
+
+            return View(technician);
+        }
+
         public IActionResult Create()
         {
             return View();

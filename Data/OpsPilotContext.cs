@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OpsPilot.Models;
 
 namespace OpsPilot.Data
@@ -12,19 +11,19 @@ namespace OpsPilot.Data
         }
 
         public DbSet<Customer> Customers { get; set; }
-
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
-
         public DbSet<WorkOrder> WorkOrders { get; set; }
-
         public DbSet<Technician> Technicians { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Technician>()
+                .ToTable("Technician");
+
             modelBuilder.Entity<ServiceRequest>()
-                .HasOne(s => s.Customer)
+                .HasOne(r => r.Customer)
                 .WithMany()
-                .HasForeignKey(s => s.CustomerId)
+                .HasForeignKey(r => r.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkOrder>()
