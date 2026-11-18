@@ -9,5 +9,9 @@
         public int ActiveWorkOrderCount { get; set; }
 
         public int TechnicianCount { get; set; }
+
+        public List<ServiceRequest> RecentRequests { get; set; } = new();
+
+        public List<WorkOrder> UpcomingWorkOrders { get; set; } = new();
     }
 }

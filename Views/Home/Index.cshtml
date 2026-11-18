@@ -74,4 +74,123 @@
             </div>
         </div>
     </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Recent Service Requests</h5>
+
+                    @if (!Model.RecentRequests.Any())
+                    {
+                        <p class="text-muted">
+                            No service requests available.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Request</th>
+                                        <th>Customer</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var request in Model.RecentRequests)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a asp-controller="ServiceRequests"
+                                                   asp-action="Details"
+                                                   asp-route-id="@request.Id">
+                                                    @request.Title
+                                                </a>
+                                            </td>
+
+                                            <td>@request.Customer?.Name</td>
+
+                                            <td>
+                                                @if (request.Status == "Completed")
+                                                {
+                                                    <span class="badge bg-success">
+                                                        Completed
+                                                    </span>
+                                                }
+                                                else if (request.Status == "In Progress")
+                                                {
+                                                    <span class="badge bg-primary">
+                                                        In Progress
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        Open
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Upcoming Work Orders</h5>
+
+                    @if (!Model.UpcomingWorkOrders.Any())
+                    {
+                        <p class="text-muted">
+                            No upcoming work orders scheduled.
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Work Order</th>
+                                        <th>Technician</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.UpcomingWorkOrders)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a asp-controller="WorkOrders"
+                                                   asp-action="Details"
+                                                   asp-route-id="@order.Id">
+                                                    @order.ServiceRequest?.Title
+                                                </a>
+                                            </td>
+
+                                            <td>
+                                                @(order.Technician?.Name ?? "Unassigned")
+                                            </td>
+
+                                            <td>
+                                                @order.ScheduledDate?.ToString("MM/dd/yyyy")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

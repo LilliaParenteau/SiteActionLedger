@@ -17,6 +17,8 @@ namespace OpsPilot.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var today = DateTime.Today;
+
             var dashboard = new DashboardViewModel
             {
                 CustomerCount = await _context.Customers.CountAsync(),
@@ -27,7 +29,23 @@ namespace OpsPilot.Controllers
                 ActiveWorkOrderCount = await _context.WorkOrders
                     .CountAsync(w => w.Status != "Completed"),
 
-                TechnicianCount = await _context.Technicians.CountAsync()
+                TechnicianCount = await _context.Technicians.CountAsync(),
+
+                RecentRequests = await _context.ServiceRequests
+                    .Include(r => r.Customer)
+                    .OrderByDescending(r => r.CreatedAt)
+                    .Take(5)
+                    .ToListAsync(),
+
+                UpcomingWorkOrders = await _context.WorkOrders
+                    .Include(w => w.ServiceRequest)
+                    .Include(w => w.Technician)
+                    .Where(w => w.ScheduledDate.HasValue &&
+                                w.ScheduledDate.Value >= today &&
+                                w.Status != "Completed")
+                    .OrderBy(w => w.ScheduledDate)
+                    .Take(5)
+                    .ToListAsync()
             };
 
             return View(dashboard);
