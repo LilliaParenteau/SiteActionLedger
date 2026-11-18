@@ -63,16 +63,23 @@ namespace OpsPilot.Controllers
             return View(workOrder);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? serviceRequestId)
         {
-            await LoadServiceRequests();
-            return View();
+            await LoadServiceRequests(serviceRequestId);
+            await LoadTechnicians();
+
+            var workOrder = new WorkOrder
+            {
+                ServiceRequestId = serviceRequestId ?? 0
+            };
+
+            return View(workOrder);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("ServiceRequestId,ScheduledDate,Notes")] WorkOrder workOrder)
+            [Bind("ServiceRequestId,ScheduledDate,Notes,TechnicianId")] WorkOrder workOrder)
         {
             var request = await _context.ServiceRequests
                 .FindAsync(workOrder.ServiceRequestId);
@@ -94,15 +101,34 @@ namespace OpsPilot.Controllers
                     "This request already has a work order.");
             }
 
+            if (workOrder.TechnicianId.HasValue)
+            {
+                bool technicianExists = await _context.Technicians
+                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
+
+                if (!technicianExists)
+                {
+                    ModelState.AddModelError(
+                        "TechnicianId",
+                        "Select a valid technician.");
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(workOrder.Notes))
+            {
+                workOrder.Notes = "";
+                ModelState.Remove(nameof(WorkOrder.Notes));
+            }
+
             if (!ModelState.IsValid)
             {
-                await LoadServiceRequests();
+                await LoadServiceRequests(workOrder.ServiceRequestId);
+                await LoadTechnicians();
+
                 return View(workOrder);
             }
 
             workOrder.Status = "Pending";
-            workOrder.Notes ??= "";
-
             request!.Status = "Open";
 
             _context.WorkOrders.Add(workOrder);
@@ -202,7 +228,7 @@ namespace OpsPilot.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadServiceRequests()
+        private async Task LoadServiceRequests(int? selectedId = null)
         {
             var assignedIds = await _context.WorkOrders
                 .Select(w => w.ServiceRequestId)
@@ -214,7 +240,7 @@ namespace OpsPilot.Controllers
                 .ToListAsync();
 
             ViewBag.ServiceRequests = new SelectList(
-                requests, "Id", "Title");
+                requests, "Id", "Title", selectedId);
         }
 
         private async Task LoadTechnicians()
