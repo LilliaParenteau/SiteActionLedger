@@ -34,6 +34,23 @@ namespace OpsPilot.Controllers
                 .ToListAsync());
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.ServiceRequests = await _context.ServiceRequests
+                .Where(r => r.CustomerId == id)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return View(customer);
+        }
+
         public IActionResult Create()
         {
             return View();

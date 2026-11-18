@@ -1,0 +1,129 @@
+﻿@model OpsPilot.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+
+    var requests = ViewBag.ServiceRequests
+        as List<OpsPilot.Models.ServiceRequest>
+        ?? new List<OpsPilot.Models.ServiceRequest>();
+}
+
+<div class="mt-4">
+    <h1>Customer Details</h1>
+    <p class="text-muted">
+        View customer information and service request history.
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>@Model.Name</h4>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9">
+                    @(string.IsNullOrEmpty(Model.Phone)
+                        ? "Not provided"
+                        : Model.Phone)
+                </dd>
+
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">@Model.Address</dd>
+            </dl>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-outline-primary">
+                Edit Customer
+            </a>
+        </div>
+    </div>
+
+    <h4>Service Request History</h4>
+
+    @if (!requests.Any())
+    {
+        <div class="alert alert-info mt-3">
+            This customer has no service requests.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-3">
+            <table class="table table-hover management-table">
+                <thead>
+                    <tr>
+                        <th>Request</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var request in requests)
+                    {
+                        <tr>
+                            <td>@request.Title</td>
+
+                            <td>
+                                @if (request.Priority == "High")
+                                {
+                                    <span class="badge bg-danger">High</span>
+                                }
+                                else if (request.Priority == "Normal")
+                                {
+                                    <span class="badge bg-primary">Normal</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Low</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (request.Status == "Completed")
+                                {
+                                    <span class="badge bg-success">Completed</span>
+                                }
+                                else if (request.Status == "In Progress")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        In Progress
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Open</span>
+                                }
+                            </td>
+
+                            <td>
+                                @request.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
+                            </td>
+
+                            <td>
+                                <a asp-controller="ServiceRequests"
+                                   asp-action="Details"
+                                   asp-route-id="@request.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            Back to Customers
+        </a>
+    </div>
+</div>
