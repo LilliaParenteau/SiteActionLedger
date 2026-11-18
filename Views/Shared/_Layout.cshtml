@@ -3,61 +3,72 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OpsPilot</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - SiteAction Ledger</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/OpsPilot.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand"
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold"
                    asp-controller="Home"
-                   asp-action="Index">OpsPilot</a>
+                   asp-action="Index">
+                    SiteAction Ledger
+                </a>
 
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
                         aria-expanded="false"
                         aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse"
-                     id="navbarSupportedContent">
-                    <ul class="navbar-nav">
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-controller="Home"
-                               asp-action="Index">Dashboard</a>
+                               asp-action="Index">
+                                Dashboard
+                            </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-controller="Customers"
-                               asp-action="Index">Customers</a>
+                               asp-action="Index">
+                                Customers
+                            </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-controller="ServiceRequests"
-                               asp-action="Index">Service Requests</a>
+                               asp-action="Index">
+                                Service Requests
+                            </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-controller="WorkOrders"
-                               asp-action="Index">Work Orders</a>
+                               asp-action="Index">
+                                Work Orders
+                            </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
+                            <a class="nav-link"
                                asp-controller="Technicians"
-                               asp-action="Index">Technicians</a>
+                               asp-action="Index">
+                                Technicians
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -66,20 +77,21 @@
     </header>
 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now.Year - OpsPilot
+            &copy; @DateTime.Now.Year - SiteAction Ledger
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
