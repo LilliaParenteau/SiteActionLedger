@@ -14,6 +14,7 @@ namespace OpsPilot.Data
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<Technician> Technicians { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,15 @@ namespace OpsPilot.Data
                 .HasOne(w => w.Technician)
                 .WithMany()
                 .HasForeignKey(w => w.TechnicianId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Project>()
+                .ToTable("Projects");
+
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.Customer)
+                .WithMany()
+                .HasForeignKey(p => p.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

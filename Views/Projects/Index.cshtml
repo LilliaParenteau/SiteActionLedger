@@ -1,0 +1,73 @@
+﻿@model IEnumerable<OpsPilot.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="mt-4">
+    <h1>Construction Projects</h1>
+
+    <p class="text-muted">
+        Manage construction projects, job sites, and client information.
+    </p>
+
+    <a asp-action="Create" class="btn btn-primary mb-4">
+        Add Project
+    </a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No construction projects have been added yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover management-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Client</th>
+                        <th>Job Site Address</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var project in Model)
+                    {
+                        <tr>
+                            <td>@project.Name</td>
+
+                            <td>@project.Customer?.Name</td>
+
+                            <td>@project.SiteAddress</td>
+
+                            <td>
+                                @if (project.Status == "Completed")
+                                {
+                                    <span class="badge bg-success">
+                                        Completed
+                                    </span>
+                                }
+                                else if (project.Status == "On Hold")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        On Hold
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">
+                                        Active
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

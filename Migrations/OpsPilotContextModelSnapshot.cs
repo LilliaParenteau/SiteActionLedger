@@ -45,6 +45,41 @@ namespace OpsPilot.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("OpsPilot.Models.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SiteAddress")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Projects", (string)null);
+                });
+
             modelBuilder.Entity("OpsPilot.Models.ServiceRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -104,7 +139,7 @@ namespace OpsPilot.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Technician");
+                    b.ToTable("Technician", (string)null);
                 });
 
             modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
@@ -141,6 +176,17 @@ namespace OpsPilot.Migrations
                     b.ToTable("WorkOrders");
                 });
 
+            modelBuilder.Entity("OpsPilot.Models.Project", b =>
+                {
+                    b.HasOne("OpsPilot.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("OpsPilot.Models.ServiceRequest", b =>
                 {
                     b.HasOne("OpsPilot.Models.Customer", "Customer")
@@ -162,7 +208,8 @@ namespace OpsPilot.Migrations
 
                     b.HasOne("OpsPilot.Models.Technician", "Technician")
                         .WithMany()
-                        .HasForeignKey("TechnicianId");
+                        .HasForeignKey("TechnicianId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ServiceRequest");
 
