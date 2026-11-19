@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OpsPilot.Data;
+using  SiteActionLedger.Data;
 
 #nullable disable
 
-namespace OpsPilot.Migrations
+namespace  SiteActionLedger.Migrations
 {
-    [DbContext(typeof(OpsPilotContext))]
+    [DbContext(typeof( SiteActionLedgerContext))]
     [Migration("20261114014824_InitialCreate")]
     partial class InitialCreate
     {
@@ -19,7 +19,7 @@ namespace OpsPilot.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
-            modelBuilder.Entity("OpsPilot.Models.Customer", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,11 +1,11 @@
-﻿@model OpsPilot.Models.Customer
+﻿@model  SiteActionLedger.Models.Customer
 
 @{
     ViewData["Title"] = "Customer Details";
 
     var requests = ViewBag.ServiceRequests
-        as List<OpsPilot.Models.ServiceRequest>
-        ?? new List<OpsPilot.Models.ServiceRequest>();
+        as List< SiteActionLedger.Models.ServiceRequest>
+        ?? new List< SiteActionLedger.Models.ServiceRequest>();
 }
 
 <div class="mt-4">

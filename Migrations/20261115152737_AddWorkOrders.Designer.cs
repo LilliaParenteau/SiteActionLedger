@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OpsPilot.Data;
+using  SiteActionLedger.Data;
 
 #nullable disable
 
-namespace OpsPilot.Migrations
+namespace  SiteActionLedger.Migrations
 {
-    [DbContext(typeof(OpsPilotContext))]
+    [DbContext(typeof( SiteActionLedgerContext))]
     [Migration("20261115152737_AddWorkOrders")]
     partial class AddWorkOrders
     {
@@ -20,7 +20,7 @@ namespace OpsPilot.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
-            modelBuilder.Entity("OpsPilot.Models.Customer", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace OpsPilot.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("OpsPilot.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,7 +85,7 @@ namespace OpsPilot.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.WorkOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,9 +114,9 @@ namespace OpsPilot.Migrations
                     b.ToTable("WorkOrders");
                 });
 
-            modelBuilder.Entity("OpsPilot.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
                 {
-                    b.HasOne("OpsPilot.Models.Customer", "Customer")
+                    b.HasOne(" SiteActionLedger.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -125,11 +125,11 @@ namespace OpsPilot.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("OpsPilot.Models.WorkOrder", b =>
+            modelBuilder.Entity(" SiteActionLedger.Models.WorkOrder", b =>
                 {
-                    b.HasOne("OpsPilot.Models.ServiceRequest", "ServiceRequest")
+                    b.HasOne(" SiteActionLedger.Models.ServiceRequest", "ServiceRequest")
                         .WithOne()
-                        .HasForeignKey("OpsPilot.Models.WorkOrder", "ServiceRequestId")
+                        .HasForeignKey(" SiteActionLedger.Models.WorkOrder", "ServiceRequestId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

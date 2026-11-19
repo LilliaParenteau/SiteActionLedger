@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OpsPilot.Models;
+using  SiteActionLedger.Models;
 
-namespace OpsPilot.Data
+namespace  SiteActionLedger.Data
 {
-    public class OpsPilotContext : DbContext
+    public class  SiteActionLedgerContext : DbContext
     {
-        public OpsPilotContext(DbContextOptions<OpsPilotContext> options)
+        public  SiteActionLedgerContext(DbContextOptions< SiteActionLedgerContext> options)
             : base(options)
         {
         }

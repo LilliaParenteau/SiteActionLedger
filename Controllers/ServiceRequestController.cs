@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OpsPilot.Data;
-using OpsPilot.Models;
+using  SiteActionLedger.Data;
+using  SiteActionLedger.Models;
 
-namespace OpsPilot.Controllers
+namespace  SiteActionLedger.Controllers
 {
     public class ServiceRequestsController : Controller
     {
-        private readonly OpsPilotContext _context;
+        private readonly  SiteActionLedgerContext _context;
 
-        public ServiceRequestsController(OpsPilotContext context)
+        public ServiceRequestsController( SiteActionLedgerContext context)
         {
             _context = context;
         }

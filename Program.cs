@@ -1,12 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
-using OpsPilot.Data;
+using  SiteActionLedger.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<OpsPilotContext>(options =>
+builder.Services.AddDbContext< SiteActionLedgerContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();

@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace OpsPilot.Models
+namespace  SiteActionLedger.Models
 {
     public class Technician
     {

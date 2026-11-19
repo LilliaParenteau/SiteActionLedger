@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OpsPilot.Data;
-using OpsPilot.Models;
+using  SiteActionLedger.Data;
+using  SiteActionLedger.Models;
 
-namespace OpsPilot.Controllers
+namespace  SiteActionLedger.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly OpsPilotContext _context;
+        private readonly  SiteActionLedgerContext _context;
 
-        public ProjectsController(OpsPilotContext context)
+        public ProjectsController( SiteActionLedgerContext context)
         {
             _context = context;
         }

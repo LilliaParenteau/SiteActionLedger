@@ -1,4 +1,4 @@
-﻿namespace OpsPilot.Models
+﻿namespace  SiteActionLedger.Models
 {
     public class DashboardViewModel
     {

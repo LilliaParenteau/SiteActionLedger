@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpsPilot.Data;
-using OpsPilot.Models;
+using  SiteActionLedger.Data;
+using  SiteActionLedger.Models;
 
-namespace OpsPilot.Controllers
+namespace  SiteActionLedger.Controllers
 {
     public class TechniciansController : Controller
     {
-        private readonly OpsPilotContext _context;
+        private readonly  SiteActionLedgerContext _context;
 
-        public TechniciansController(OpsPilotContext context)
+        public TechniciansController( SiteActionLedgerContext context)
         {
             _context = context;
         }

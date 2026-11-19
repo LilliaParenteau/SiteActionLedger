@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace OpsPilot.Migrations
+namespace  SiteActionLedger.Migrations
 {
     /// <inheritdoc />
     public partial class AddProjects : Migration

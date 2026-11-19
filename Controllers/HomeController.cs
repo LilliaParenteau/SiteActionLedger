@@ -1,16 +1,16 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpsPilot.Data;
-using OpsPilot.Models;
+using  SiteActionLedger.Data;
+using  SiteActionLedger.Models;
 
-namespace OpsPilot.Controllers
+namespace  SiteActionLedger.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly OpsPilotContext _context;
+        private readonly  SiteActionLedgerContext _context;
 
-        public HomeController(OpsPilotContext context)
+        public HomeController( SiteActionLedgerContext context)
         {
             _context = context;
         }

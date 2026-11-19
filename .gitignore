@@ -404,3 +404,8 @@ FodyWeavers.xsd
 opspilot.db
 opspilot.db-shm
 opspilot.db-wal
+
+# SiteAction Ledger database
+siteactionledger.db
+siteactionledger.db-shm
+siteactionledger.db-wal

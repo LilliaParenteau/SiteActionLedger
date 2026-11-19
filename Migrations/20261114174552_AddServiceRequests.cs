@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace OpsPilot.Migrations
+namespace  SiteActionLedger.Migrations
 {
     /// <inheritdoc />
     public partial class AddServiceRequests : Migration
