@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Models;
+using SiteActionLedger.Models;
 
-namespace  SiteActionLedger.Data
+namespace SiteActionLedger.Data
 {
-    public class  SiteActionLedgerContext : DbContext
+    public class SiteActionLedgerContext : DbContext
     {
-        public  SiteActionLedgerContext(DbContextOptions< SiteActionLedgerContext> options)
+        public SiteActionLedgerContext(
+            DbContextOptions<SiteActionLedgerContext> options)
             : base(options)
         {
         }
@@ -21,10 +22,25 @@ namespace  SiteActionLedger.Data
             modelBuilder.Entity<Technician>()
                 .ToTable("Technician");
 
+            modelBuilder.Entity<Project>()
+                .ToTable("Projects");
+
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.Customer)
+                .WithMany()
+                .HasForeignKey(p => p.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ServiceRequest>()
                 .HasOne(r => r.Customer)
                 .WithMany()
                 .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ServiceRequest>()
+                .HasOne(r => r.Project)
+                .WithMany()
+                .HasForeignKey(r => r.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkOrder>()
@@ -38,15 +54,6 @@ namespace  SiteActionLedger.Data
                 .WithMany()
                 .HasForeignKey(w => w.TechnicianId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Project>()
-                .ToTable("Projects");
-
-            modelBuilder.Entity<Project>()
-                .HasOne(p => p.Customer)
-                .WithMany()
-                .HasForeignKey(p => p.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

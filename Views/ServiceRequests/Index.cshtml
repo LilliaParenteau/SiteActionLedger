@@ -1,4 +1,4 @@
-﻿@model IEnumerable< SiteActionLedger.Models.ServiceRequest>
+﻿@model IEnumerable<SiteActionLedger.Models.ServiceRequest>
 
 @{
     ViewData["Title"] = "Service Requests";
@@ -11,7 +11,7 @@
     <h1>Service Requests</h1>
 
     <p class="text-muted">
-        View and track customer service requests.
+        Track construction issues and their associated projects.
     </p>
 
     <a asp-action="Create" class="btn btn-primary mb-4">
@@ -24,7 +24,7 @@
                    name="search"
                    value="@ViewBag.Search"
                    class="form-control"
-                   placeholder="Search requests or customers" />
+                   placeholder="Search issues, projects, or clients" />
         </div>
 
         <div class="col-md-2">
@@ -86,8 +86,9 @@
             <table class="table table-hover management-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Customer</th>
+                        <th>Issue</th>
+                        <th>Project</th>
+                        <th>Client</th>
                         <th>Priority</th>
                         <th>Status</th>
                         <th>Date Created</th>
@@ -100,6 +101,23 @@
                     {
                         <tr>
                             <td>@request.Title</td>
+
+                            <td>
+                                @if (request.Project != null)
+                                {
+                                    <a asp-controller="Projects"
+                                       asp-action="Details"
+                                       asp-route-id="@request.ProjectId">
+                                        @request.Project.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Not Assigned
+                                    </span>
+                                }
+                            </td>
 
                             <td>@request.Customer?.Name</td>
 
@@ -121,7 +139,9 @@
                             <td>
                                 @if (request.Status == "Completed")
                                 {
-                                    <span class="badge bg-success">Completed</span>
+                                    <span class="badge bg-success">
+                                        Completed
+                                    </span>
                                 }
                                 else if (request.Status == "In Progress")
                                 {
@@ -131,7 +151,9 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">Open</span>
+                                    <span class="badge bg-secondary">
+                                        Open
+                                    </span>
                                 }
                             </td>
 

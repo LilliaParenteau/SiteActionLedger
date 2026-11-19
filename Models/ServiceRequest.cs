@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace  SiteActionLedger.Models
+namespace SiteActionLedger.Models
 {
     public class ServiceRequest
     {
@@ -25,5 +24,9 @@ namespace  SiteActionLedger.Models
         public int CustomerId { get; set; }
 
         public Customer? Customer { get; set; }
+
+        public int? ProjectId { get; set; }
+
+        public Project? Project { get; set; }
     }
 }

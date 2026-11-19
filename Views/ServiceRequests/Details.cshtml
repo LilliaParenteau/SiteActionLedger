@@ -1,4 +1,4 @@
-﻿@model  SiteActionLedger.Models.ServiceRequest
+﻿@model SiteActionLedger.Models.ServiceRequest
 
 @{
     ViewData["Title"] = "Service Request Details";
@@ -6,8 +6,9 @@
 
 <div class="mt-4">
     <h1>Service Request Details</h1>
+
     <p class="text-muted">
-        View request information and associated work orders.
+        View construction issue information and corrective work.
     </p>
 
     <div class="card mt-4">
@@ -17,7 +18,25 @@
             <hr />
 
             <dl class="row">
-                <dt class="col-sm-3">Customer</dt>
+                <dt class="col-sm-3">Construction Project</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Project != null)
+                    {
+                        <a asp-controller="Projects"
+                           asp-action="Details"
+                           asp-route-id="@Model.ProjectId">
+                            @Model.Project.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">
+                            Not Assigned
+                        </span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Client</dt>
                 <dd class="col-sm-9">@Model.Customer?.Name</dd>
 
                 <dt class="col-sm-3">Description</dt>
@@ -42,7 +61,7 @@
             @if (ViewBag.WorkOrderId != null)
             {
                 <p class="text-muted">
-                    A work order has been created for this request.
+                    A work order has been created for this issue.
                 </p>
 
                 <a asp-controller="WorkOrders"
@@ -55,11 +74,12 @@
             else
             {
                 <p class="text-muted">
-                    No work order has been created for this request.
+                    No work order has been created for this issue.
                 </p>
 
                 <a asp-controller="WorkOrders"
                    asp-action="Create"
+                   asp-route-serviceRequestId="@Model.Id"
                    class="btn btn-outline-primary">
                     Create Work Order
                 </a>
