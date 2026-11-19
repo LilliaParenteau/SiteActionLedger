@@ -1,4 +1,4 @@
-﻿@model IEnumerable< SiteActionLedger.Models.Project>
+﻿@model IEnumerable<SiteActionLedger.Models.Project>
 
 @{
     ViewData["Title"] = "Projects";
@@ -31,6 +31,7 @@
                         <th>Client</th>
                         <th>Job Site Address</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -38,7 +39,12 @@
                     @foreach (var project in Model)
                     {
                         <tr>
-                            <td>@project.Name</td>
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@project.Id">
+                                    @project.Name
+                                </a>
+                            </td>
 
                             <td>@project.Customer?.Name</td>
 
@@ -63,6 +69,20 @@
                                         Active
                                     </span>
                                 }
+                            </td>
+
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@project.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@project.Id"
+                                   class="btn btn-sm btn-outline-secondary">
+                                    Edit
+                                </a>
                             </td>
                         </tr>
                     }

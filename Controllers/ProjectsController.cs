@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Data;
-using  SiteActionLedger.Models;
+using SiteActionLedger.Data;
+using SiteActionLedger.Models;
 
-namespace  SiteActionLedger.Controllers
+namespace SiteActionLedger.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly  SiteActionLedgerContext _context;
+        private readonly SiteActionLedgerContext _context;
 
-        public ProjectsController( SiteActionLedgerContext context)
+        public ProjectsController(SiteActionLedgerContext context)
         {
             _context = context;
         }
@@ -23,6 +23,20 @@ namespace  SiteActionLedger.Controllers
                 .ToListAsync();
 
             return View(projects);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var project = await _context.Projects
+                .Include(p => p.Customer)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return View(project);
         }
 
         public async Task<IActionResult> Create()
@@ -45,9 +59,7 @@ namespace  SiteActionLedger.Controllers
                     "CustomerId", "Select a valid client.");
             }
 
-            if (project.Status != "Active" &&
-                project.Status != "On Hold" &&
-                project.Status != "Completed")
+            if (!ValidStatus(project.Status))
             {
                 ModelState.AddModelError(
                     "Status", "Select a valid project status.");
@@ -55,7 +67,7 @@ namespace  SiteActionLedger.Controllers
 
             if (!ModelState.IsValid)
             {
-                await LoadCustomers();
+                await LoadCustomers(project.CustomerId);
                 return View(project);
             }
 
@@ -65,14 +77,85 @@ namespace  SiteActionLedger.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadCustomers()
+        public async Task<IActionResult> Edit(int id)
+        {
+            var project = await _context.Projects.FindAsync(id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            await LoadCustomers(project.CustomerId);
+            return View(project);
+        }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(
+            int id,
+            [Bind("Id,Name,SiteAddress,Description,Status,CustomerId")] Project project)
+        {
+            if (id != project.Id)
+            {
+                return BadRequest();
+            }
+
+            var existingProject = await _context.Projects.FindAsync(id);
+
+            if (existingProject == null)
+            {
+                return NotFound();
+            }
+
+            bool customerExists = await _context.Customers
+                .AnyAsync(c => c.Id == project.CustomerId);
+
+            if (!customerExists)
+            {
+                ModelState.AddModelError(
+                    "CustomerId", "Select a valid client.");
+            }
+
+            if (!ValidStatus(project.Status))
+            {
+                ModelState.AddModelError(
+                    "Status", "Select a valid project status.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await LoadCustomers(project.CustomerId);
+                return View("Edit", project);
+            }
+
+            existingProject.Name = project.Name;
+            existingProject.SiteAddress = project.SiteAddress;
+            existingProject.Description = project.Description;
+            existingProject.Status = project.Status;
+            existingProject.CustomerId = project.CustomerId;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ValidStatus(string status)
+        {
+            return status == "Active" ||
+                   status == "On Hold" ||
+                   status == "Completed";
+        }
+
+        private async Task LoadCustomers(int? selectedId = null)
         {
             var customers = await _context.Customers
                 .OrderBy(c => c.Name)
                 .ToListAsync();
 
             ViewBag.Customers = new SelectList(
-                customers, "Id", "Name");
+                customers, "Id", "Name", selectedId);
         }
     }
 }
