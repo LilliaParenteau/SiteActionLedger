@@ -1,29 +1,39 @@
-﻿@model  SiteActionLedger.Models.DashboardViewModel
+﻿@model SiteActionLedger.Models.DashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
 <div class="dashboard-page mt-4">
+
     <div class="mb-4">
-        <p class="dashboard-label">CONSTRUCTION ISSUE TRACKING</p>
+        <p class="dashboard-label">
+            CONSTRUCTION ISSUE TRACKING
+        </p>
+
         <h1>SiteAction Ledger</h1>
+
         <p class="text-muted">
-            Track service requests, corrective work, and team assignments.
+            Monitor construction projects, reported site issues,
+            corrective work, and technician assignments.
         </p>
     </div>
 
     <div class="row g-3">
+
         <div class="col-md-6 col-xl-3">
             <div class="card dashboard-card h-100">
                 <div class="card-body d-flex flex-column">
-                    <h6 class="text-muted">Total Customers</h6>
-                    <h2 class="dashboard-number">@Model.CustomerCount</h2>
+                    <h6 class="text-muted">Active Projects</h6>
 
-                    <a asp-controller="Customers"
+                    <h2 class="dashboard-number">
+                        @Model.ActiveProjectCount
+                    </h2>
+
+                    <a asp-controller="Projects"
                        asp-action="Index"
                        class="btn btn-outline-primary mt-auto">
-                        View Customers
+                        View Projects
                     </a>
                 </div>
             </div>
@@ -32,13 +42,16 @@
         <div class="col-md-6 col-xl-3">
             <div class="card dashboard-card h-100">
                 <div class="card-body d-flex flex-column">
-                    <h6 class="text-muted">Open Requests</h6>
-                    <h2 class="dashboard-number">@Model.OpenRequestCount</h2>
+                    <h6 class="text-muted">Unresolved Site Issues</h6>
+
+                    <h2 class="dashboard-number">
+                        @Model.UnresolvedIssueCount
+                    </h2>
 
                     <a asp-controller="ServiceRequests"
                        asp-action="Index"
                        class="btn btn-outline-primary mt-auto">
-                        View Requests
+                        View Site Issues
                     </a>
                 </div>
             </div>
@@ -48,7 +61,10 @@
             <div class="card dashboard-card h-100">
                 <div class="card-body d-flex flex-column">
                     <h6 class="text-muted">Active Work Orders</h6>
-                    <h2 class="dashboard-number">@Model.ActiveWorkOrderCount</h2>
+
+                    <h2 class="dashboard-number">
+                        @Model.ActiveWorkOrderCount
+                    </h2>
 
                     <a asp-controller="WorkOrders"
                        asp-action="Index"
@@ -60,10 +76,51 @@
         </div>
 
         <div class="col-md-6 col-xl-3">
+            <div class="card dashboard-card h-100 border-danger">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="text-muted">Overdue Work Orders</h6>
+
+                    <h2 class="dashboard-number text-danger">
+                        @Model.OverdueWorkOrderCount
+                    </h2>
+
+                    <span class="text-muted small mt-auto">
+                        Unfinished work past its scheduled date
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mt-1">
+
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="text-muted">Customers</h6>
+
+                    <h2 class="dashboard-number">
+                        @Model.CustomerCount
+                    </h2>
+
+                    <a asp-controller="Customers"
+                       asp-action="Index"
+                       class="btn btn-outline-primary mt-auto">
+                        View Customers
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
             <div class="card dashboard-card h-100">
                 <div class="card-body d-flex flex-column">
                     <h6 class="text-muted">Technicians</h6>
-                    <h2 class="dashboard-number">@Model.TechnicianCount</h2>
+
+                    <h2 class="dashboard-number">
+                        @Model.TechnicianCount
+                    </h2>
 
                     <a asp-controller="Technicians"
                        asp-action="Index"
@@ -73,18 +130,119 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="text-muted">New / Open Issues</h6>
+
+                    <h2 class="dashboard-number">
+                        @Model.OpenRequestCount
+                    </h2>
+
+                    <a asp-controller="ServiceRequests"
+                       asp-action="Index"
+                       asp-route-status="Open"
+                       class="btn btn-outline-primary mt-auto">
+                        View Open Issues
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="row g-4 mt-2">
+    <div class="card dashboard-card mt-4">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Project Issue Summary</h5>
+
+                <a asp-controller="Projects"
+                   asp-action="Index"
+                   class="btn btn-sm btn-outline-primary">
+                    All Projects
+                </a>
+            </div>
+
+            @if (!Model.ProjectIssueSummaries.Any())
+            {
+                <p class="text-muted mb-0">
+                    No construction projects available.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle management-table">
+                        <thead>
+                            <tr>
+                                <th>Construction Project</th>
+                                <th>Client</th>
+                                <th>Total Issues</th>
+                                <th>Unresolved Issues</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var project in Model.ProjectIssueSummaries)
+                            {
+                                <tr>
+                                    <td>@project.ProjectName</td>
+
+                                    <td>@project.CustomerName</td>
+
+                                    <td>@project.TotalIssueCount</td>
+
+                                    <td>
+                                        @if (project.UnresolvedIssueCount > 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                @project.UnresolvedIssueCount
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">
+                                                0
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <a asp-controller="Projects"
+                                           asp-action="Details"
+                                           asp-route-id="@project.ProjectId"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-muted small mb-0">
+                    Showing up to eight projects.
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+
         <div class="col-lg-6">
             <div class="card dashboard-card h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Recent Service Requests</h5>
+
+                    <h5 class="mb-3">Recent Site Issues</h5>
 
                     @if (!Model.RecentRequests.Any())
                     {
                         <p class="text-muted">
-                            No service requests available.
+                            No site issues have been reported.
                         </p>
                     }
                     else
@@ -93,33 +251,36 @@
                             <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
-                                        <th>Request</th>
-                                        <th>Customer</th>
+                                        <th>Issue</th>
+                                        <th>Project</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
-                                    @foreach (var request in Model.RecentRequests)
+                                    @foreach (var issue in Model.RecentRequests)
                                     {
                                         <tr>
                                             <td>
                                                 <a asp-controller="ServiceRequests"
                                                    asp-action="Details"
-                                                   asp-route-id="@request.Id">
-                                                    @request.Title
+                                                   asp-route-id="@issue.Id">
+                                                    @issue.Title
                                                 </a>
                                             </td>
 
-                                            <td>@request.Customer?.Name</td>
+                                            <td>
+                                                @(issue.Project?.Name ?? "Not Assigned")
+                                            </td>
 
                                             <td>
-                                                @if (request.Status == "Completed")
+                                                @if (issue.Status == "Completed")
                                                 {
                                                     <span class="badge bg-success">
                                                         Completed
                                                     </span>
                                                 }
-                                                else if (request.Status == "In Progress")
+                                                else if (issue.Status == "In Progress")
                                                 {
                                                     <span class="badge bg-primary">
                                                         In Progress
@@ -145,12 +306,13 @@
         <div class="col-lg-6">
             <div class="card dashboard-card h-100">
                 <div class="card-body">
+
                     <h5 class="mb-3">Upcoming Work Orders</h5>
 
                     @if (!Model.UpcomingWorkOrders.Any())
                     {
                         <p class="text-muted">
-                            No upcoming work orders scheduled.
+                            No upcoming corrective work scheduled.
                         </p>
                     }
                     else
@@ -159,11 +321,12 @@
                             <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
-                                        <th>Work Order</th>
+                                        <th>Site Issue</th>
                                         <th>Technician</th>
                                         <th>Date</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     @foreach (var order in Model.UpcomingWorkOrders)
                                     {
@@ -192,5 +355,80 @@
                 </div>
             </div>
         </div>
+
     </div>
+
+    <div class="card dashboard-card mt-4 mb-4">
+        <div class="card-body">
+
+            <h5 class="mb-3">Overdue Corrective Work</h5>
+
+            @if (!Model.OverdueWorkOrders.Any())
+            {
+                <p class="text-muted mb-0">
+                    No overdue work orders.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle management-table">
+                        <thead>
+                            <tr>
+                                <th>Site Issue</th>
+                                <th>Technician</th>
+                                <th>Scheduled Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var order in Model.OverdueWorkOrders)
+                            {
+                                <tr>
+                                    <td>
+                                        @order.ServiceRequest?.Title
+                                    </td>
+
+                                    <td>
+                                        @(order.Technician?.Name ?? "Unassigned")
+                                    </td>
+
+                                    <td class="text-danger">
+                                        @order.ScheduledDate?.ToString("MM/dd/yyyy")
+                                    </td>
+
+                                    <td>
+                                        @if (order.Status == "In Progress")
+                                        {
+                                            <span class="badge bg-primary">
+                                                In Progress
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Pending
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <a asp-controller="WorkOrders"
+                                           asp-action="Details"
+                                           asp-route-id="@order.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
 </div>
