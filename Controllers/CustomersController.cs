@@ -61,6 +61,12 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> Create(
             [Bind("Name,Email,Phone,Address")] Customer customer)
         {
+            if (string.IsNullOrWhiteSpace(customer.Phone))
+            {
+                customer.Phone = "";
+                ModelState.Remove(nameof(Customer.Phone));
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(customer);
@@ -104,6 +110,12 @@ namespace SiteActionLedger.Controllers
                 c => c.Phone,
                 c => c.Address
             );
+
+            if (string.IsNullOrWhiteSpace(customer.Phone))
+            {
+                customer.Phone = "";
+                ModelState.Remove(nameof(Customer.Phone));
+            }
 
             if (!updated || !ModelState.IsValid)
             {

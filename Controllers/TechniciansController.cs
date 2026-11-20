@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Data;
-using  SiteActionLedger.Models;
+using SiteActionLedger.Data;
+using SiteActionLedger.Models;
 
-namespace  SiteActionLedger.Controllers
+namespace SiteActionLedger.Controllers
 {
     public class TechniciansController : Controller
     {
-        private readonly  SiteActionLedgerContext _context;
+        private readonly SiteActionLedgerContext _context;
 
-        public TechniciansController( SiteActionLedgerContext context)
+        public TechniciansController(SiteActionLedgerContext context)
         {
             _context = context;
         }
@@ -62,6 +62,12 @@ namespace  SiteActionLedger.Controllers
         public async Task<IActionResult> Create(
             [Bind("Name,Specialty,Phone")] Technician technician)
         {
+            if (string.IsNullOrWhiteSpace(technician.Phone))
+            {
+                technician.Phone = "";
+                ModelState.Remove(nameof(Technician.Phone));
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(technician);
@@ -102,6 +108,12 @@ namespace  SiteActionLedger.Controllers
             if (existingTechnician == null)
             {
                 return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(technician.Phone))
+            {
+                technician.Phone = "";
+                ModelState.Remove(nameof(Technician.Phone));
             }
 
             if (!ModelState.IsValid)
