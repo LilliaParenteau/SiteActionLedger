@@ -88,12 +88,10 @@ namespace SiteActionLedger.Controllers
         {
             await LoadProjects(projectId);
 
-            var request = new ServiceRequest
+            return View(new ServiceRequest
             {
                 ProjectId = projectId
-            };
-
-            return View(request);
+            });
         }
 
         [HttpPost]
@@ -125,7 +123,8 @@ namespace SiteActionLedger.Controllers
             if (project == null)
             {
                 ModelState.AddModelError(
-                    "ProjectId", "Select a valid construction project.");
+                    "ProjectId",
+                    "Select a valid construction project.");
             }
             else
             {
@@ -160,6 +159,21 @@ namespace SiteActionLedger.Controllers
                 return NotFound();
             }
 
+            var workOrder = await _context.WorkOrders
+                .Where(w => w.ServiceRequestId == id)
+                .Select(w => new { w.Id, w.Status })
+                .FirstOrDefaultAsync();
+
+            ViewBag.LinkedWorkOrderId = workOrder?.Id;
+
+            if (workOrder != null)
+            {
+                ViewBag.LinkedWorkOrderStatus =
+                    workOrder.Status == "Pending"
+                    ? "Open"
+                    : workOrder.Status;
+            }
+
             await LoadProjects(request.ProjectId);
 
             return View(request);
@@ -168,7 +182,7 @@ namespace SiteActionLedger.Controllers
         [HttpPost]
         [ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int id)
+        public async Task<IActionResult> EditPost(int id, string? status)
         {
             var request = await _context.ServiceRequests
                 .FirstOrDefaultAsync(r => r.Id == id);
@@ -180,6 +194,11 @@ namespace SiteActionLedger.Controllers
 
             int? originalProjectId = request.ProjectId;
 
+            var workOrder = await _context.WorkOrders
+                .Where(w => w.ServiceRequestId == id)
+                .Select(w => new { w.Id, w.Status })
+                .FirstOrDefaultAsync();
+
             bool updated = await TryUpdateModelAsync(
                 request,
                 "",
@@ -188,7 +207,6 @@ namespace SiteActionLedger.Controllers
                 r => r.Category,
                 r => r.SiteArea,
                 r => r.Priority,
-                r => r.Status,
                 r => r.ProjectId
             );
 
@@ -198,16 +216,23 @@ namespace SiteActionLedger.Controllers
                     "Priority", "Select a valid priority.");
             }
 
-            if (!ValidStatus(request.Status))
-            {
-                ModelState.AddModelError(
-                    "Status", "Select a valid status.");
-            }
-
             if (!ValidCategory(request.Category))
             {
                 ModelState.AddModelError(
                     "Category", "Select a valid issue category.");
+            }
+
+            if (workOrder == null)
+            {
+                if (!ValidStatus(status))
+                {
+                    ModelState.AddModelError(
+                        "Status", "Select a valid status.");
+                }
+                else
+                {
+                    request.Status = status!;
+                }
             }
 
             if (request.ProjectId.HasValue)
@@ -218,7 +243,8 @@ namespace SiteActionLedger.Controllers
                 if (project == null)
                 {
                     ModelState.AddModelError(
-                        "ProjectId", "Select a valid construction project.");
+                        "ProjectId",
+                        "Select a valid construction project.");
                 }
                 else
                 {
@@ -228,13 +254,32 @@ namespace SiteActionLedger.Controllers
             else if (originalProjectId.HasValue)
             {
                 ModelState.AddModelError(
-                    "ProjectId", "Select a construction project.");
+                    "ProjectId",
+                    "Select a construction project.");
             }
 
             if (!updated || !ModelState.IsValid)
             {
+                ViewBag.LinkedWorkOrderId = workOrder?.Id;
+
+                if (workOrder != null)
+                {
+                    ViewBag.LinkedWorkOrderStatus =
+                        workOrder.Status == "Pending"
+                        ? "Open"
+                        : workOrder.Status;
+                }
+
                 await LoadProjects(request.ProjectId);
+
                 return View("Edit", request);
+            }
+
+            if (workOrder != null)
+            {
+                request.Status = workOrder.Status == "Pending"
+                    ? "Open"
+                    : workOrder.Status;
             }
 
             await _context.SaveChangesAsync();

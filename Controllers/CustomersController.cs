@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Data;
-using  SiteActionLedger.Models;
+using SiteActionLedger.Data;
+using SiteActionLedger.Models;
 
-namespace  SiteActionLedger.Controllers
+namespace SiteActionLedger.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly  SiteActionLedgerContext _context;
+        private readonly SiteActionLedgerContext _context;
 
-        public CustomersController( SiteActionLedgerContext context)
+        public CustomersController(SiteActionLedgerContext context)
         {
             _context = context;
         }
@@ -142,10 +142,14 @@ namespace  SiteActionLedger.Controllers
             bool hasRequests = await _context.ServiceRequests
                 .AnyAsync(r => r.CustomerId == id);
 
-            if (hasRequests)
+            bool hasProjects = await _context.Projects
+                .AnyAsync(p => p.CustomerId == id);
+
+            if (hasRequests || hasProjects)
             {
-                ModelState.AddModelError("",
-                    "This customer has existing service requests and cannot be deleted.");
+                ModelState.AddModelError(
+                    "",
+                    "This customer has existing projects or site issues and cannot be deleted.");
 
                 return View("Delete", customer);
             }

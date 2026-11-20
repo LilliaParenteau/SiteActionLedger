@@ -129,6 +129,20 @@ namespace SiteActionLedger.Controllers
                     "Status", "Select a valid project status.");
             }
 
+            if (existingProject.CustomerId != project.CustomerId)
+            {
+                bool hasSiteIssues = await _context.ServiceRequests
+                    .AnyAsync(r => r.ProjectId == id);
+
+                if (hasSiteIssues)
+                {
+                    ModelState.AddModelError(
+                        "CustomerId",
+                        "This project has existing site issues. " +
+                        "Reassign those issues before changing the client.");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 await LoadCustomers(project.CustomerId);

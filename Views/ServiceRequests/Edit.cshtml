@@ -109,18 +109,37 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Status" class="form-label">
+            <label class="form-label">
                 Status
             </label>
 
-            <select asp-for="Status" class="form-select">
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-            </select>
+            @if (ViewBag.LinkedWorkOrderId != null)
+            {
+                <p class="form-control-plaintext">
+                    @ViewBag.LinkedWorkOrderStatus
+                </p>
 
-            <span asp-validation-for="Status"
-                  class="text-danger"></span>
+                <div class="form-text">
+                    This issue's status is managed through its work order.
+
+                    <a asp-controller="WorkOrders"
+                       asp-action="Edit"
+                       asp-route-id="@ViewBag.LinkedWorkOrderId">
+                        Edit Work Order
+                    </a>
+                </div>
+            }
+            else
+            {
+                <select asp-for="Status" class="form-select">
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+
+                <span asp-validation-for="Status"
+                      class="text-danger"></span>
+            }
         </div>
 
         <button type="submit" class="btn btn-primary">
