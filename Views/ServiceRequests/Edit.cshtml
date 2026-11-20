@@ -1,11 +1,11 @@
 ﻿@model SiteActionLedger.Models.ServiceRequest
 
 @{
-    ViewData["Title"] = "Edit Service Request";
+    ViewData["Title"] = "Edit Site Issue";
 }
 
 <div class="mt-4">
-    <h1>Edit Service Request</h1>
+    <h1>Edit Site Issue</h1>
 
     <p class="text-muted">
         Update the construction issue and its associated project.
@@ -40,7 +40,8 @@
                 Issue Title
             </label>
 
-            <input asp-for="Title" class="form-control" />
+            <input asp-for="Title"
+                   class="form-control" />
 
             <span asp-validation-for="Title"
                   class="text-danger"></span>
@@ -56,6 +57,39 @@
                       rows="4"></textarea>
 
             <span asp-validation-for="Description"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Category" class="form-label">
+                Issue Category
+            </label>
+
+            <select asp-for="Category" class="form-select">
+                <option value="">Not Specified</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="HVAC">HVAC</option>
+                <option value="Structural">Structural</option>
+                <option value="Interior Finishes">Interior Finishes</option>
+                <option value="Safety">Safety</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <span asp-validation-for="Category"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SiteArea" class="form-label">
+                Site Location
+            </label>
+
+            <input asp-for="SiteArea"
+                   class="form-control"
+                   placeholder="Example: Second-floor mechanical room" />
+
+            <span asp-validation-for="SiteArea"
                   class="text-danger"></span>
         </div>
 
@@ -93,7 +127,8 @@
             Save Changes
         </button>
 
-        <a asp-action="Index" class="btn btn-secondary">
+        <a asp-action="Index"
+           class="btn btn-secondary">
             Cancel
         </a>
     </form>

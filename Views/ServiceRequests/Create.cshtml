@@ -1,61 +1,117 @@
-﻿@model  SiteActionLedger.Models.ServiceRequest
+﻿@model SiteActionLedger.Models.ServiceRequest
 
 @{
-    ViewData["Title"] = "Add Service Request";
+    ViewData["Title"] = "Report Site Issue";
 }
 
 <div class="mt-4">
-    <h1>Add Service Request</h1>
+    <h1>Report Site Issue</h1>
+
     <p class="text-muted">
-        Enter the details of the service request.
+        Record an issue found at a construction project.
     </p>
 
     <form asp-action="Create" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3"></div>
 
         <div class="mb-3">
-            <label asp-for="CustomerId" class="form-label">
-                Customer
+            <label asp-for="ProjectId" class="form-label">
+                Construction Project
             </label>
-            <select asp-for="CustomerId"
-                    asp-items="ViewBag.Customers"
+
+            <select asp-for="ProjectId"
+                    asp-items="ViewBag.Projects"
                     class="form-select">
-                <option value="">Select a customer</option>
+                <option value="">Select a project</option>
             </select>
-            <span asp-validation-for="CustomerId" class="text-danger"></span>
+
+            <span asp-validation-for="ProjectId"
+                  class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Title" class="form-label"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+            <label asp-for="Title" class="form-label">
+                Issue Title
+            </label>
+
+            <input asp-for="Title"
+                   class="form-control" />
+
+            <span asp-validation-for="Title"
+                  class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Description" class="form-label"></label>
+            <label asp-for="Description" class="form-label">
+                Issue Description
+            </label>
+
             <textarea asp-for="Description"
                       class="form-control"
                       rows="4"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+
+            <span asp-validation-for="Description"
+                  class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Priority" class="form-label"></label>
+            <label asp-for="Category" class="form-label">
+                Issue Category
+            </label>
+
+            <select asp-for="Category" class="form-select">
+                <option value="">Not Specified</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="HVAC">HVAC</option>
+                <option value="Structural">Structural</option>
+                <option value="Interior Finishes">Interior Finishes</option>
+                <option value="Safety">Safety</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <span asp-validation-for="Category"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SiteArea" class="form-label">
+                Site Location
+            </label>
+
+            <input asp-for="SiteArea"
+                   class="form-control"
+                   placeholder="Example: Second-floor mechanical room" />
+
+            <span asp-validation-for="SiteArea"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Priority" class="form-label">
+                Priority
+            </label>
+
             <select asp-for="Priority" class="form-select">
                 <option value="Low">Low</option>
                 <option value="Normal">Normal</option>
                 <option value="High">High</option>
             </select>
-            <span asp-validation-for="Priority" class="text-danger"></span>
+
+            <span asp-validation-for="Priority"
+                  class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">
-            Save Request
+            Save Issue
         </button>
 
         <a asp-action="Index" class="btn btn-secondary">
             Cancel
         </a>
+
     </form>
 </div>
 
