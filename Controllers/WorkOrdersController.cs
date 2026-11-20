@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Data;
-using  SiteActionLedger.Models;
+using SiteActionLedger.Data;
+using SiteActionLedger.Models;
 
-namespace  SiteActionLedger.Controllers
+namespace SiteActionLedger.Controllers
 {
     public class WorkOrdersController : Controller
     {
-        private readonly  SiteActionLedgerContext _context;
+        private readonly SiteActionLedgerContext _context;
 
-        public WorkOrdersController( SiteActionLedgerContext context)
+        public WorkOrdersController(SiteActionLedgerContext context)
         {
             _context = context;
         }
@@ -79,7 +79,8 @@ namespace  SiteActionLedger.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("ServiceRequestId,ScheduledDate,Notes,TechnicianId")] WorkOrder workOrder)
+            [Bind("ServiceRequestId,ScheduledDate,Notes,TechnicianId")]
+            WorkOrder workOrder)
         {
             var request = await _context.ServiceRequests
                 .FindAsync(workOrder.ServiceRequestId);
@@ -92,7 +93,8 @@ namespace  SiteActionLedger.Controllers
             }
 
             bool alreadyAssigned = await _context.WorkOrders
-                .AnyAsync(w => w.ServiceRequestId == workOrder.ServiceRequestId);
+                .AnyAsync(w =>
+                    w.ServiceRequestId == workOrder.ServiceRequestId);
 
             if (alreadyAssigned)
             {
@@ -104,7 +106,8 @@ namespace  SiteActionLedger.Controllers
             if (workOrder.TechnicianId.HasValue)
             {
                 bool technicianExists = await _context.Technicians
-                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
+                    .AnyAsync(t =>
+                        t.Id == workOrder.TechnicianId.Value);
 
                 if (!technicianExists)
                 {
@@ -151,6 +154,7 @@ namespace  SiteActionLedger.Controllers
             }
 
             await LoadTechnicians();
+
             return View(workOrder);
         }
 
@@ -162,7 +166,6 @@ namespace  SiteActionLedger.Controllers
             var workOrder = await _context.WorkOrders
                 .Include(w => w.ServiceRequest)
                 .ThenInclude(r => r!.Customer)
-                .Include(w => w.Technician)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workOrder == null)
@@ -176,7 +179,8 @@ namespace  SiteActionLedger.Controllers
                 w => w.ScheduledDate,
                 w => w.Status,
                 w => w.Notes,
-                w => w.TechnicianId
+                w => w.TechnicianId,
+                w => w.ResolutionNotes
             );
 
             if (workOrder.Status != "Pending" &&
@@ -191,7 +195,8 @@ namespace  SiteActionLedger.Controllers
             if (workOrder.TechnicianId.HasValue)
             {
                 bool technicianExists = await _context.Technicians
-                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
+                    .AnyAsync(t =>
+                        t.Id == workOrder.TechnicianId.Value);
 
                 if (!technicianExists)
                 {
@@ -201,10 +206,37 @@ namespace  SiteActionLedger.Controllers
                 }
             }
 
+            if (string.IsNullOrWhiteSpace(workOrder.Notes))
+            {
+                workOrder.Notes = "";
+                ModelState.Remove(nameof(WorkOrder.Notes));
+            }
+
+            if (workOrder.Status == "Completed" &&
+                string.IsNullOrWhiteSpace(workOrder.ResolutionNotes))
+            {
+                ModelState.AddModelError(
+                    "ResolutionNotes",
+                    "Enter resolution notes before completing the work order.");
+            }
+
             if (!updated || !ModelState.IsValid)
             {
                 await LoadTechnicians();
+
                 return View("Edit", workOrder);
+            }
+
+            if (workOrder.Status == "Completed")
+            {
+                if (!workOrder.CompletedAt.HasValue)
+                {
+                    workOrder.CompletedAt = DateTime.UtcNow;
+                }
+            }
+            else
+            {
+                workOrder.CompletedAt = null;
             }
 
             if (workOrder.ServiceRequest != null)

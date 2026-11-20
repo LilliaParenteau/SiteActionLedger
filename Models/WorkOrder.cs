@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace  SiteActionLedger.Models
+namespace SiteActionLedger.Models
 {
     public class WorkOrder
     {
@@ -23,5 +22,10 @@ namespace  SiteActionLedger.Models
         public int? TechnicianId { get; set; }
 
         public Technician? Technician { get; set; }
+
+        [StringLength(1000)]
+        public string? ResolutionNotes { get; set; }
+
+        public DateTime? CompletedAt { get; set; }
     }
 }

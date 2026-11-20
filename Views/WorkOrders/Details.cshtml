@@ -1,64 +1,109 @@
-﻿@model  SiteActionLedger.Models.WorkOrder
+﻿@model SiteActionLedger.Models.WorkOrder
 
 @{
     ViewData["Title"] = "Work Order Details";
 }
 
 <div class="mt-4">
-    <h1>Work Order #@Model.Id</h1>
-    <p class="text-muted">View work order information.</p>
+    <h1>Work Order Details</h1>
+
+    <p class="text-muted">
+        Review assigned corrective work and its resolution.
+    </p>
 
     <div class="card mt-4">
         <div class="card-body">
-            <h4 class="card-title">
-                @Model.ServiceRequest?.Title
-            </h4>
+            <h4>Work Order #@Model.Id</h4>
 
-            <dl class="row mt-4">
-                <dt class="col-sm-3">Customer</dt>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">Site Issue</dt>
+                <dd class="col-sm-9">
+                    <a asp-controller="ServiceRequests"
+                       asp-action="Details"
+                       asp-route-id="@Model.ServiceRequestId">
+                        @Model.ServiceRequest?.Title
+                    </a>
+                </dd>
+
+                <dt class="col-sm-3">Client</dt>
                 <dd class="col-sm-9">
                     @Model.ServiceRequest?.Customer?.Name
                 </dd>
 
-                <dt class="col-sm-3">Service Request</dt>
-                <dd class="col-sm-9">
-                    #@Model.ServiceRequestId
-                </dd>
-
                 <dt class="col-sm-3">Assigned Technician</dt>
                 <dd class="col-sm-9">
-                    @(Model.Technician == null
-                        ? "Unassigned"
-                        : $"{Model.Technician.Name} - {Model.Technician.Specialty}")
+                    @(Model.Technician?.Name ?? "Unassigned")
+                </dd>
+
+                <dt class="col-sm-3">Specialty</dt>
+                <dd class="col-sm-9">
+                    @(Model.Technician?.Specialty ?? "Not Specified")
                 </dd>
 
                 <dt class="col-sm-3">Scheduled Date</dt>
                 <dd class="col-sm-9">
                     @(Model.ScheduledDate?.ToString("MM/dd/yyyy")
-                        ?? "Not scheduled")
+                        ?? "Not Scheduled")
                 </dd>
 
                 <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9">@Model.Status</dd>
+                <dd class="col-sm-9">
+                    @if (Model.Status == "Completed")
+                    {
+                        <span class="badge bg-success">
+                            Completed
+                        </span>
+                    }
+                    else if (Model.Status == "In Progress")
+                    {
+                        <span class="badge bg-warning text-dark">
+                            In Progress
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            Pending
+                        </span>
+                    }
+                </dd>
 
-                <dt class="col-sm-3">Job Notes</dt>
+                <dt class="col-sm-3">Work Notes</dt>
                 <dd class="col-sm-9">
                     @(string.IsNullOrWhiteSpace(Model.Notes)
-                        ? "No notes added."
+                        ? "No notes"
                         : Model.Notes)
+                </dd>
+
+                <dt class="col-sm-3">Resolution Notes</dt>
+                <dd class="col-sm-9">
+                    @(string.IsNullOrWhiteSpace(Model.ResolutionNotes)
+                        ? "Not provided"
+                        : Model.ResolutionNotes)
+                </dd>
+
+                <dt class="col-sm-3">Completion Date</dt>
+                <dd class="col-sm-9">
+                    @(Model.CompletedAt.HasValue
+                        ? Model.CompletedAt.Value.ToLocalTime().ToString("MM/dd/yyyy h:mm tt")
+                        : "Not Completed")
                 </dd>
             </dl>
         </div>
     </div>
 
-    <a asp-action="Edit"
-       asp-route-id="@Model.Id"
-       class="btn btn-primary mt-3">
-        Edit Work Order
-    </a>
+    <div class="mt-3">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Edit Work Order
+        </a>
 
-    <a asp-action="Index"
-       class="btn btn-secondary mt-3">
-        Back to Work Orders
-    </a>
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Work Orders
+        </a>
+    </div>
 </div>

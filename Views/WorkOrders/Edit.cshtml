@@ -1,4 +1,4 @@
-﻿@model  SiteActionLedger.Models.WorkOrder
+﻿@model SiteActionLedger.Models.WorkOrder
 
 @{
     ViewData["Title"] = "Edit Work Order";
@@ -6,20 +6,45 @@
 
 <div class="mt-4">
     <h1>Edit Work Order #@Model.Id</h1>
+
     <p class="text-muted">
-        Update the scheduling and progress of this job.
+        Manage corrective work, technician assignments, and resolution details.
     </p>
 
-    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Associated Site Issue</h5>
+
+            <a asp-controller="ServiceRequests"
+               asp-action="Details"
+               asp-route-id="@Model.ServiceRequestId">
+                @Model.ServiceRequest?.Title
+            </a>
+
+            <p class="text-muted mb-0 mt-2">
+                Client: @Model.ServiceRequest?.Customer?.Name
+            </p>
+        </div>
+    </div>
+
+    <form asp-action="Edit"
+          asp-route-id="@Model.Id"
+          method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3"></div>
 
         <div class="mb-3">
             <label asp-for="ScheduledDate" class="form-label">
                 Scheduled Date
             </label>
+
             <input asp-for="ScheduledDate"
                    type="date"
                    class="form-control" />
+
             <span asp-validation-for="ScheduledDate"
                   class="text-danger"></span>
         </div>
@@ -28,35 +53,73 @@
             <label asp-for="TechnicianId" class="form-label">
                 Assigned Technician
             </label>
+
             <select asp-for="TechnicianId"
                     asp-items="ViewBag.Technicians"
                     class="form-select">
                 <option value="">Unassigned</option>
             </select>
+
             <span asp-validation-for="TechnicianId"
                   class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Status" class="form-label"></label>
+            <label asp-for="Status" class="form-label">
+                Work Order Status
+            </label>
+
             <select asp-for="Status" class="form-select">
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
             </select>
-            <span asp-validation-for="Status" class="text-danger"></span>
+
+            <span asp-validation-for="Status"
+                  class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Notes" class="form-label">
-                Job Notes
+                Work Notes
             </label>
+
             <textarea asp-for="Notes"
                       class="form-control"
                       rows="4"></textarea>
+
             <span asp-validation-for="Notes"
                   class="text-danger"></span>
         </div>
+
+        <div class="mb-3">
+            <label asp-for="ResolutionNotes" class="form-label">
+                Resolution Notes
+            </label>
+
+            <textarea asp-for="ResolutionNotes"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Describe the corrective work completed"></textarea>
+
+            <span asp-validation-for="ResolutionNotes"
+                  class="text-danger"></span>
+
+            <div class="form-text">
+                Required when marking the work order Completed.
+            </div>
+        </div>
+
+        @if (Model.CompletedAt.HasValue)
+        {
+            <div class="mb-3">
+                <label class="form-label">Completion Date</label>
+
+                <p class="form-control-plaintext">
+                    @Model.CompletedAt.Value.ToLocalTime().ToString("MM/dd/yyyy h:mm tt")
+                </p>
+            </div>
+        }
 
         <button type="submit" class="btn btn-primary">
             Save Changes
