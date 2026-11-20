@@ -14,6 +14,12 @@ namespace SiteActionLedger.Models
         [StringLength(500)]
         public string Description { get; set; } = "";
 
+        [StringLength(60)]
+        public string? Category { get; set; }
+
+        [StringLength(120)]
+        public string? SiteArea { get; set; }
+
         public string Priority { get; set; } = "Normal";
 
         public string Status { get; set; } = "Open";

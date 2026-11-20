@@ -86,6 +86,10 @@ namespace SiteActionLedger.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Category")
+                        .HasMaxLength(60)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -103,6 +107,10 @@ namespace SiteActionLedger.Migrations
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SiteArea")
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .IsRequired()
