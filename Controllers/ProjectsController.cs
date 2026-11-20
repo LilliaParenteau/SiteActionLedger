@@ -36,6 +36,11 @@ namespace SiteActionLedger.Controllers
                 return NotFound();
             }
 
+            ViewBag.SiteIssues = await _context.ServiceRequests
+                .Where(r => r.ProjectId == id)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
             return View(project);
         }
 

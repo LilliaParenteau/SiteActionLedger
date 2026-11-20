@@ -16,7 +16,10 @@ namespace SiteActionLedger.Controllers
         }
 
         public async Task<IActionResult> Index(
-            string? search, string? status, string? priority)
+            string? search,
+            string? status,
+            string? priority,
+            string? category)
         {
             var requests = _context.ServiceRequests
                 .Include(r => r.Customer)
@@ -30,26 +33,31 @@ namespace SiteActionLedger.Controllers
                     r.Description.Contains(search) ||
                     r.Customer!.Name.Contains(search) ||
                     (r.Project != null &&
-                     r.Project.Name.Contains(search)));
+                     r.Project.Name.Contains(search)) ||
+                    (r.SiteArea != null &&
+                     r.SiteArea.Contains(search)));
             }
 
-            if (status == "Open" ||
-                status == "In Progress" ||
-                status == "Completed")
+            if (ValidStatus(status))
             {
                 requests = requests.Where(r => r.Status == status);
             }
 
-            if (priority == "Low" ||
-                priority == "Normal" ||
-                priority == "High")
+            if (ValidPriority(priority))
             {
                 requests = requests.Where(r => r.Priority == priority);
+            }
+
+            if (!string.IsNullOrWhiteSpace(category) &&
+                ValidCategory(category))
+            {
+                requests = requests.Where(r => r.Category == category);
             }
 
             ViewBag.Search = search;
             ViewBag.Status = status;
             ViewBag.Priority = priority;
+            ViewBag.Category = category;
 
             return View(await requests
                 .OrderByDescending(r => r.CreatedAt)
@@ -76,21 +84,34 @@ namespace SiteActionLedger.Controllers
             return View(request);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? projectId)
         {
-            await LoadProjects();
-            return View(new ServiceRequest());
+            await LoadProjects(projectId);
+
+            var request = new ServiceRequest
+            {
+                ProjectId = projectId
+            };
+
+            return View(request);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Title,Description,Priority,ProjectId")] ServiceRequest request)
+            [Bind("Title,Description,Category,SiteArea,Priority,ProjectId")]
+            ServiceRequest request)
         {
             if (!ValidPriority(request.Priority))
             {
                 ModelState.AddModelError(
                     "Priority", "Select a valid priority.");
+            }
+
+            if (!ValidCategory(request.Category))
+            {
+                ModelState.AddModelError(
+                    "Category", "Select a valid issue category.");
             }
 
             Project? project = null;
@@ -150,8 +171,6 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> EditPost(int id)
         {
             var request = await _context.ServiceRequests
-                .Include(r => r.Customer)
-                .Include(r => r.Project)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (request == null)
@@ -166,6 +185,8 @@ namespace SiteActionLedger.Controllers
                 "",
                 r => r.Title,
                 r => r.Description,
+                r => r.Category,
+                r => r.SiteArea,
                 r => r.Priority,
                 r => r.Status,
                 r => r.ProjectId
@@ -181,6 +202,12 @@ namespace SiteActionLedger.Controllers
             {
                 ModelState.AddModelError(
                     "Status", "Select a valid status.");
+            }
+
+            if (!ValidCategory(request.Category))
+            {
+                ModelState.AddModelError(
+                    "Category", "Select a valid issue category.");
             }
 
             if (request.ProjectId.HasValue)
@@ -215,18 +242,30 @@ namespace SiteActionLedger.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ValidPriority(string priority)
+        private bool ValidPriority(string? priority)
         {
             return priority == "Low" ||
                    priority == "Normal" ||
                    priority == "High";
         }
 
-        private bool ValidStatus(string status)
+        private bool ValidStatus(string? status)
         {
             return status == "Open" ||
                    status == "In Progress" ||
                    status == "Completed";
+        }
+
+        private bool ValidCategory(string? category)
+        {
+            return string.IsNullOrWhiteSpace(category) ||
+                   category == "Electrical" ||
+                   category == "Plumbing" ||
+                   category == "HVAC" ||
+                   category == "Structural" ||
+                   category == "Interior Finishes" ||
+                   category == "Safety" ||
+                   category == "Other";
         }
 
         private async Task LoadProjects(int? selectedId = null)
