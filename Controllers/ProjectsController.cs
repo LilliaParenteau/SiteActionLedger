@@ -53,7 +53,8 @@ namespace SiteActionLedger.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Name,SiteAddress,Description,Status,CustomerId")] Project project)
+            [Bind("Name,SiteAddress,Description,Status,CustomerId")]
+            Project project)
         {
             bool customerExists = await _context.Customers
                 .AnyAsync(c => c.Id == project.CustomerId);
@@ -68,6 +69,12 @@ namespace SiteActionLedger.Controllers
             {
                 ModelState.AddModelError(
                     "Status", "Select a valid project status.");
+            }
+
+            if (string.IsNullOrWhiteSpace(project.Description))
+            {
+                project.Description = "";
+                ModelState.Remove(nameof(Project.Description));
             }
 
             if (!ModelState.IsValid)
@@ -100,7 +107,8 @@ namespace SiteActionLedger.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPost(
             int id,
-            [Bind("Id,Name,SiteAddress,Description,Status,CustomerId")] Project project)
+            [Bind("Id,Name,SiteAddress,Description,Status,CustomerId")]
+            Project project)
         {
             if (id != project.Id)
             {
@@ -127,6 +135,12 @@ namespace SiteActionLedger.Controllers
             {
                 ModelState.AddModelError(
                     "Status", "Select a valid project status.");
+            }
+
+            if (string.IsNullOrWhiteSpace(project.Description))
+            {
+                project.Description = "";
+                ModelState.Remove(nameof(Project.Description));
             }
 
             if (existingProject.CustomerId != project.CustomerId)
