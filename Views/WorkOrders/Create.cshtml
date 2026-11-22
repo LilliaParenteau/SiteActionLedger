@@ -1,4 +1,4 @@
-﻿@model  SiteActionLedger.Models.WorkOrder
+﻿@model SiteActionLedger.Models.WorkOrder
 
 @{
     ViewData["Title"] = "Create Work Order";
@@ -17,13 +17,13 @@
 
         <div class="mb-3">
             <label asp-for="ServiceRequestId" class="form-label">
-                Service Request
+                Site Issue
             </label>
 
             <select asp-for="ServiceRequestId"
                     asp-items="ViewBag.ServiceRequests"
                     class="form-select">
-                <option value="0">Select a service request</option>
+                <option value="0">Select a site issue</option>
             </select>
 
             <span asp-validation-for="ServiceRequestId"

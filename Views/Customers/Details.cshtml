@@ -1,17 +1,17 @@
-﻿@model  SiteActionLedger.Models.Customer
+﻿@model SiteActionLedger.Models.Customer
 
 @{
     ViewData["Title"] = "Customer Details";
 
     var requests = ViewBag.ServiceRequests
-        as List< SiteActionLedger.Models.ServiceRequest>
-        ?? new List< SiteActionLedger.Models.ServiceRequest>();
+        as List<SiteActionLedger.Models.ServiceRequest>
+        ?? new List<SiteActionLedger.Models.ServiceRequest>();
 }
 
 <div class="mt-4">
     <h1>Customer Details</h1>
     <p class="text-muted">
-        View customer information and service request history.
+        View customer information and site issue history.
     </p>
 
     <div class="card mb-4">
@@ -42,12 +42,12 @@
         </div>
     </div>
 
-    <h4>Service Request History</h4>
+    <h4>Site Issue History</h4>
 
     @if (!requests.Any())
     {
         <div class="alert alert-info mt-3">
-            This customer has no service requests.
+            This customer has no reported site issues.
         </div>
     }
     else
@@ -56,7 +56,7 @@
             <table class="table table-hover management-table">
                 <thead>
                     <tr>
-                        <th>Request</th>
+                        <th>Site Issue</th>
                         <th>Priority</th>
                         <th>Status</th>
                         <th>Date Created</th>

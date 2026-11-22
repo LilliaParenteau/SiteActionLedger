@@ -1,4 +1,4 @@
-﻿@model IEnumerable< SiteActionLedger.Models.WorkOrder>
+﻿@model IEnumerable<SiteActionLedger.Models.WorkOrder>
 
 @{
     ViewData["Title"] = "Work Orders";
@@ -21,7 +21,7 @@
                    name="search"
                    value="@ViewBag.Search"
                    class="form-control"
-                   placeholder="Search requests, customers, or technicians" />
+                   placeholder="Search site issues, customers, or technicians" />
         </div>
 
         <div class="col-md-3">
@@ -66,7 +66,7 @@
                 <thead>
                     <tr>
                         <th>Order</th>
-                        <th>Service Request</th>
+                        <th>Site Issue</th>
                         <th>Customer</th>
                         <th>Technician</th>
                         <th>Scheduled Date</th>

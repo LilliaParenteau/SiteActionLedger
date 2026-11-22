@@ -1,11 +1,11 @@
-﻿@model  SiteActionLedger.Models.Technician
+﻿@model SiteActionLedger.Models.Technician
 
 @{
     ViewData["Title"] = "Technician Details";
 
     var workOrders = ViewBag.WorkOrders
-        as List< SiteActionLedger.Models.WorkOrder>
-        ?? new List< SiteActionLedger.Models.WorkOrder>();
+        as List<SiteActionLedger.Models.WorkOrder>
+        ?? new List<SiteActionLedger.Models.WorkOrder>();
 }
 
 <div class="mt-4">
@@ -58,7 +58,7 @@
                 <thead>
                     <tr>
                         <th>Order</th>
-                        <th>Service Request</th>
+                        <th>Site Issue</th>
                         <th>Customer</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
