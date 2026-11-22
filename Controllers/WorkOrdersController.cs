@@ -119,8 +119,9 @@ namespace SiteActionLedger.Controllers
 
             if (string.IsNullOrWhiteSpace(workOrder.Notes))
             {
-                workOrder.Notes = "";
-                ModelState.Remove(nameof(WorkOrder.Notes));
+                ModelState.AddModelError(
+                    nameof(WorkOrder.Notes),
+                    "Enter work notes.");
             }
 
             if (!ModelState.IsValid)
@@ -208,8 +209,9 @@ namespace SiteActionLedger.Controllers
 
             if (string.IsNullOrWhiteSpace(workOrder.Notes))
             {
-                workOrder.Notes = "";
-                ModelState.Remove(nameof(WorkOrder.Notes));
+                ModelState.AddModelError(
+                    nameof(WorkOrder.Notes),
+                    "Enter work notes.");
             }
 
             if (workOrder.Status == "Completed" &&
