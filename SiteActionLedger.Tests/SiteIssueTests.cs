@@ -36,6 +36,7 @@ namespace SiteActionLedger.Tests
             {
                 Name = "Harbor Construction",
                 Email = "harbor@example.com",
+                Phone = "321-555-0142",
                 Address = "100 Main Street"
             };
 

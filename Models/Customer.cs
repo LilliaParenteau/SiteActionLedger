@@ -1,7 +1,6 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace  SiteActionLedger.Models
+namespace SiteActionLedger.Models
 {
     public class Customer
     {
@@ -15,6 +14,7 @@ namespace  SiteActionLedger.Models
         [EmailAddress]
         public string Email { get; set; } = "";
 
+        [Required]
         public string Phone { get; set; } = "";
 
         [Required]
