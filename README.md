@@ -69,7 +69,7 @@ The application uses a local SQLite database named `siteactionledger.db`, which 
 
 ## Automated Tests
 
-The project includes 20 automated tests covering data relationships, validation, site issue creation, technician assignments, and work-order status changes.
+The project includes 22 automated tests covering data relationships, validation, site issue creation, technician assignments, and work-order status changes.
 
 Run the tests through Visual Studio Test Explorer or:
 
