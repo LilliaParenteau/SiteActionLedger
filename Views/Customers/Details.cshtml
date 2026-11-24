@@ -10,6 +10,7 @@
 
 <div class="mt-4">
     <h1>Customer Details</h1>
+
     <p class="text-muted">
         View customer information and site issue history.
     </p>
@@ -17,6 +18,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <h4>@Model.Name</h4>
+
             <hr />
 
             <dl class="row">
@@ -24,11 +26,7 @@
                 <dd class="col-sm-9">@Model.Email</dd>
 
                 <dt class="col-sm-3">Phone</dt>
-                <dd class="col-sm-9">
-                    @(string.IsNullOrEmpty(Model.Phone)
-                        ? "Not provided"
-                        : Model.Phone)
-                </dd>
+                <dd class="col-sm-9">@Model.Phone</dd>
 
                 <dt class="col-sm-3">Address</dt>
                 <dd class="col-sm-9">@Model.Address</dd>
@@ -86,11 +84,13 @@
                             </td>
 
                             <td>
-                                @if (request.Status == "Completed")
+                                @if (request.Status == SiteIssueStatuses.Completed)
                                 {
-                                    <span class="badge bg-success">Completed</span>
+                                    <span class="badge bg-success">
+                                        Completed
+                                    </span>
                                 }
-                                else if (request.Status == "In Progress")
+                                else if (request.Status == SiteIssueStatuses.InProgress)
                                 {
                                     <span class="badge bg-warning text-dark">
                                         In Progress
@@ -98,7 +98,9 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">Open</span>
+                                    <span class="badge bg-secondary">
+                                        Open
+                                    </span>
                                 }
                             </td>
 
@@ -122,7 +124,8 @@
     }
 
     <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">
+        <a asp-action="Index"
+           class="btn btn-secondary">
             Back to Customers
         </a>
     </div>

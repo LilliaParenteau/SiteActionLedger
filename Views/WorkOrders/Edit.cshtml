@@ -70,9 +70,9 @@
             </label>
 
             <select asp-for="Status" class="form-select">
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
+                <option value="@WorkOrderStatuses.Pending">Pending</option>
+                <option value="@WorkOrderStatuses.InProgress">In Progress</option>
+                <option value="@WorkOrderStatuses.Completed">Completed</option>
             </select>
 
             <span asp-validation-for="Status"

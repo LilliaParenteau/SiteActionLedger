@@ -14,7 +14,7 @@ namespace SiteActionLedger.Models
         [DataType(DataType.Date)]
         public DateTime? ScheduledDate { get; set; }
 
-        public string Status { get; set; } = "Pending";
+        public string Status { get; set; } = WorkOrderStatuses.Pending;
 
         [Required(ErrorMessage = "Enter work notes.")]
         [StringLength(500)]

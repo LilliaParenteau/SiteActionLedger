@@ -8,7 +8,7 @@
     <h1>Edit Site Issue</h1>
 
     <p class="text-muted">
-        Update the construction issue and its associated project.
+        Update the reported issue, its location, priority, and status.
     </p>
 
     <form asp-action="Edit"
@@ -40,8 +40,7 @@
                 Issue Title
             </label>
 
-            <input asp-for="Title"
-                   class="form-control" />
+            <input asp-for="Title" class="form-control" />
 
             <span asp-validation-for="Title"
                   class="text-danger"></span>
@@ -110,7 +109,7 @@
 
         <div class="mb-3">
             <label class="form-label">
-                Status
+                Issue Status
             </label>
 
             @if (ViewBag.LinkedWorkOrderId != null)
@@ -121,7 +120,6 @@
 
                 <div class="form-text">
                     This issue's status is managed through its work order.
-
                     <a asp-controller="WorkOrders"
                        asp-action="Edit"
                        asp-route-id="@ViewBag.LinkedWorkOrderId">
@@ -132,9 +130,9 @@
             else
             {
                 <select asp-for="Status" class="form-select">
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
+                    <option value="@SiteIssueStatuses.Open">Open</option>
+                    <option value="@SiteIssueStatuses.InProgress">In Progress</option>
+                    <option value="@SiteIssueStatuses.Completed">Completed</option>
                 </select>
 
                 <span asp-validation-for="Status"
@@ -146,8 +144,7 @@
             Save Changes
         </button>
 
-        <a asp-action="Index"
-           class="btn btn-secondary">
+        <a asp-action="Index" class="btn btn-secondary">
             Cancel
         </a>
     </form>

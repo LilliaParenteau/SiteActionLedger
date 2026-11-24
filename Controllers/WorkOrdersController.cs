@@ -32,9 +32,9 @@ namespace SiteActionLedger.Controllers
                      w.Technician.Name.Contains(search)));
             }
 
-            if (status == "Pending" ||
-                status == "In Progress" ||
-                status == "Completed")
+            if (status == WorkOrderStatuses.Pending ||
+                status == WorkOrderStatuses.InProgress ||
+                status == WorkOrderStatuses.Completed)
             {
                 workOrders = workOrders.Where(w => w.Status == status);
             }
@@ -125,8 +125,8 @@ namespace SiteActionLedger.Controllers
                 return View(workOrder);
             }
 
-            workOrder.Status = "Pending";
-            request!.Status = "Open";
+            workOrder.Status = WorkOrderStatuses.Pending;
+            request!.Status = SiteIssueStatuses.Open;
 
             _context.WorkOrders.Add(workOrder);
             await _context.SaveChangesAsync();
@@ -177,9 +177,9 @@ namespace SiteActionLedger.Controllers
                 w => w.ResolutionNotes
             );
 
-            if (workOrder.Status != "Pending" &&
-                workOrder.Status != "In Progress" &&
-                workOrder.Status != "Completed")
+            if (workOrder.Status != WorkOrderStatuses.Pending &&
+                workOrder.Status != WorkOrderStatuses.InProgress &&
+                workOrder.Status != WorkOrderStatuses.Completed)
             {
                 ModelState.AddModelError(
                     "Status",
@@ -200,7 +200,7 @@ namespace SiteActionLedger.Controllers
                 }
             }
 
-            if (workOrder.Status == "Completed" &&
+            if (workOrder.Status == WorkOrderStatuses.Completed &&
                 string.IsNullOrWhiteSpace(workOrder.ResolutionNotes))
             {
                 ModelState.AddModelError(
@@ -215,7 +215,7 @@ namespace SiteActionLedger.Controllers
                 return View("Edit", workOrder);
             }
 
-            if (workOrder.Status == "Completed")
+            if (workOrder.Status == WorkOrderStatuses.Completed)
             {
                 if (!workOrder.CompletedAt.HasValue)
                 {
@@ -229,17 +229,17 @@ namespace SiteActionLedger.Controllers
 
             if (workOrder.ServiceRequest != null)
             {
-                if (workOrder.Status == "Pending")
+                if (workOrder.Status == WorkOrderStatuses.Pending)
                 {
-                    workOrder.ServiceRequest.Status = "Open";
+                    workOrder.ServiceRequest.Status = SiteIssueStatuses.Open;
                 }
-                else if (workOrder.Status == "In Progress")
+                else if (workOrder.Status == WorkOrderStatuses.InProgress)
                 {
-                    workOrder.ServiceRequest.Status = "In Progress";
+                    workOrder.ServiceRequest.Status = SiteIssueStatuses.InProgress;
                 }
-                else if (workOrder.Status == "Completed")
+                else if (workOrder.Status == WorkOrderStatuses.Completed)
                 {
-                    workOrder.ServiceRequest.Status = "Completed";
+                    workOrder.ServiceRequest.Status = SiteIssueStatuses.Completed;
                 }
             }
 

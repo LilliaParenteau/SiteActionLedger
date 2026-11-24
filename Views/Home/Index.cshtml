@@ -142,7 +142,7 @@
 
                     <a asp-controller="ServiceRequests"
                        asp-action="Index"
-                       asp-route-status="Open"
+                       asp-route-status="@SiteIssueStatuses.Open"
                        class="btn btn-outline-primary mt-auto">
                         View Open Issues
                     </a>
@@ -274,13 +274,13 @@
                                             </td>
 
                                             <td>
-                                                @if (issue.Status == "Completed")
+                                                @if (issue.Status == SiteIssueStatuses.Completed)
                                                 {
                                                     <span class="badge bg-success">
                                                         Completed
                                                     </span>
                                                 }
-                                                else if (issue.Status == "In Progress")
+                                                else if (issue.Status == SiteIssueStatuses.InProgress)
                                                 {
                                                     <span class="badge bg-primary">
                                                         In Progress
@@ -400,7 +400,7 @@
                                     </td>
 
                                     <td>
-                                        @if (order.Status == "In Progress")
+                                        @if (order.Status == WorkOrderStatuses.InProgress)
                                         {
                                             <span class="badge bg-primary">
                                                 In Progress

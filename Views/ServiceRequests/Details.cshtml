@@ -78,13 +78,13 @@
 
                 <dt class="col-sm-3">Status</dt>
                 <dd class="col-sm-9">
-                    @if (Model.Status == "Completed")
+                    @if (Model.Status == SiteIssueStatuses.Completed)
                     {
                         <span class="badge bg-success">
                             Completed
                         </span>
                     }
-                    else if (Model.Status == "In Progress")
+                    else if (Model.Status == SiteIssueStatuses.InProgress)
                     {
                         <span class="badge bg-warning text-dark">
                             In Progress

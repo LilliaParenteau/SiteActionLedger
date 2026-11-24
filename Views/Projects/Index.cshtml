@@ -51,13 +51,13 @@
                             <td>@project.SiteAddress</td>
 
                             <td>
-                                @if (project.Status == "Completed")
+                                @if (project.Status == ProjectStatuses.Completed)
                                 {
                                     <span class="badge bg-success">
                                         Completed
                                     </span>
                                 }
-                                else if (project.Status == "On Hold")
+                                else if (project.Status == ProjectStatuses.OnHold)
                                 {
                                     <span class="badge bg-warning text-dark">
                                         On Hold

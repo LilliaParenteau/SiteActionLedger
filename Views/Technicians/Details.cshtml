@@ -10,8 +10,9 @@
 
 <div class="mt-4">
     <h1>Technician Details</h1>
+
     <p class="text-muted">
-        View technician information and assigned work orders.
+        View technician information and assigned corrective work.
     </p>
 
     <div class="card mb-4">
@@ -26,7 +27,7 @@
 
                 <dt class="col-sm-3">Phone</dt>
                 <dd class="col-sm-9">
-                    @(string.IsNullOrEmpty(Model.Phone)
+                    @(string.IsNullOrWhiteSpace(Model.Phone)
                         ? "Not provided"
                         : Model.Phone)
                 </dd>
@@ -82,15 +83,15 @@
                             </td>
 
                             <td>
-                                @if (order.Status == "Completed")
+                                @if (order.Status == WorkOrderStatuses.Completed)
                                 {
                                     <span class="badge bg-success">
                                         Completed
                                     </span>
                                 }
-                                else if (order.Status == "In Progress")
+                                else if (order.Status == WorkOrderStatuses.InProgress)
                                 {
-                                    <span class="badge bg-primary">
+                                    <span class="badge bg-warning text-dark">
                                         In Progress
                                     </span>
                                 }
@@ -118,7 +119,8 @@
     }
 
     <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary">
+        <a asp-action="Index"
+           class="btn btn-secondary">
             Back to Technicians
         </a>
     </div>

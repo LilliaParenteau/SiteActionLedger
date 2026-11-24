@@ -138,7 +138,7 @@ namespace SiteActionLedger.Controllers
                 return View(request);
             }
 
-            request.Status = "Open";
+            request.Status = SiteIssueStatuses.Open;
             request.CreatedAt = DateTime.UtcNow;
 
             _context.ServiceRequests.Add(request);
@@ -169,8 +169,8 @@ namespace SiteActionLedger.Controllers
             if (workOrder != null)
             {
                 ViewBag.LinkedWorkOrderStatus =
-                    workOrder.Status == "Pending"
-                    ? "Open"
+                    workOrder.Status == WorkOrderStatuses.Pending
+                    ? SiteIssueStatuses.Open
                     : workOrder.Status;
             }
 
@@ -265,8 +265,8 @@ namespace SiteActionLedger.Controllers
                 if (workOrder != null)
                 {
                     ViewBag.LinkedWorkOrderStatus =
-                        workOrder.Status == "Pending"
-                        ? "Open"
+                        workOrder.Status == WorkOrderStatuses.Pending
+                        ? SiteIssueStatuses.Open
                         : workOrder.Status;
                 }
 
@@ -277,8 +277,8 @@ namespace SiteActionLedger.Controllers
 
             if (workOrder != null)
             {
-                request.Status = workOrder.Status == "Pending"
-                    ? "Open"
+                request.Status = workOrder.Status == WorkOrderStatuses.Pending
+                    ? SiteIssueStatuses.Open
                     : workOrder.Status;
             }
 
@@ -296,9 +296,9 @@ namespace SiteActionLedger.Controllers
 
         private bool ValidStatus(string? status)
         {
-            return status == "Open" ||
-                   status == "In Progress" ||
-                   status == "Completed";
+            return status == SiteIssueStatuses.Open ||
+                   status == SiteIssueStatuses.InProgress ||
+                   status == SiteIssueStatuses.Completed;
         }
 
         private bool ValidCategory(string? category)

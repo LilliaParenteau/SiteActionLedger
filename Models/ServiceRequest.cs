@@ -22,7 +22,7 @@ namespace SiteActionLedger.Models
 
         public string Priority { get; set; } = "Normal";
 
-        public string Status { get; set; } = "Open";
+        public string Status { get; set; } = SiteIssueStatuses.Open;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

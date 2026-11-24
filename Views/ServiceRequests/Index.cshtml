@@ -32,7 +32,12 @@
             <select name="status" class="form-select">
                 <option value="">All Statuses</option>
 
-                @foreach (var status in new[] { "Open", "In Progress", "Completed" })
+                @foreach (var status in new[]
+                {
+                    SiteIssueStatuses.Open,
+                    SiteIssueStatuses.InProgress,
+                    SiteIssueStatuses.Completed
+                })
                 {
                     if (currentStatus == status)
                     {
@@ -185,13 +190,13 @@
                             </td>
 
                             <td>
-                                @if (request.Status == "Completed")
+                                @if (request.Status == SiteIssueStatuses.Completed)
                                 {
                                     <span class="badge bg-success">
                                         Completed
                                     </span>
                                 }
-                                else if (request.Status == "In Progress")
+                                else if (request.Status == SiteIssueStatuses.InProgress)
                                 {
                                     <span class="badge bg-warning text-dark">
                                         In Progress

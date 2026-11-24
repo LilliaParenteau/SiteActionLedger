@@ -176,9 +176,9 @@ namespace SiteActionLedger.Controllers
 
         private bool ValidStatus(string status)
         {
-            return status == "Active" ||
-                   status == "On Hold" ||
-                   status == "Completed";
+            return status == ProjectStatuses.Active ||
+                   status == ProjectStatuses.OnHold ||
+                   status == ProjectStatuses.Completed;
         }
 
         private async Task LoadCustomers(int? selectedId = null)

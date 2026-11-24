@@ -1,4 +1,4 @@
-﻿@model  SiteActionLedger.Models.Project
+﻿@model SiteActionLedger.Models.Project
 
 @{
     ViewData["Title"] = "Add Project";
@@ -72,9 +72,9 @@
             </label>
 
             <select asp-for="Status" class="form-select">
-                <option value="Active">Active</option>
-                <option value="On Hold">On Hold</option>
-                <option value="Completed">Completed</option>
+                <option value="@ProjectStatuses.Active">Active</option>
+                <option value="@ProjectStatuses.OnHold">On Hold</option>
+                <option value="@ProjectStatuses.Completed">Completed</option>
             </select>
 
             <span asp-validation-for="Status"

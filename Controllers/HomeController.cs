@@ -26,22 +26,22 @@ namespace SiteActionLedger.Controllers
                 TechnicianCount = await _context.Technicians.CountAsync(),
 
                 ActiveProjectCount = await _context.Projects
-                    .CountAsync(p => p.Status == "Active"),
+                    .CountAsync(p => p.Status == ProjectStatuses.Active),
 
                 OpenRequestCount = await _context.ServiceRequests
-                    .CountAsync(r => r.Status == "Open"),
+                    .CountAsync(r => r.Status == SiteIssueStatuses.Open),
 
                 UnresolvedIssueCount = await _context.ServiceRequests
-                    .CountAsync(r => r.Status != "Completed"),
+                    .CountAsync(r => r.Status != SiteIssueStatuses.Completed),
 
                 ActiveWorkOrderCount = await _context.WorkOrders
-                    .CountAsync(w => w.Status != "Completed"),
+                    .CountAsync(w => w.Status != WorkOrderStatuses.Completed),
 
                 OverdueWorkOrderCount = await _context.WorkOrders
                     .CountAsync(w =>
                         w.ScheduledDate.HasValue &&
                         w.ScheduledDate.Value < today &&
-                        w.Status != "Completed"),
+                        w.Status != WorkOrderStatuses.Completed),
 
                 RecentRequests = await _context.ServiceRequests
                     .AsNoTracking()
@@ -58,7 +58,7 @@ namespace SiteActionLedger.Controllers
                     .Where(w =>
                         w.ScheduledDate.HasValue &&
                         w.ScheduledDate.Value >= today &&
-                        w.Status != "Completed")
+                        w.Status != WorkOrderStatuses.Completed)
                     .OrderBy(w => w.ScheduledDate)
                     .Take(5)
                     .ToListAsync(),
@@ -70,7 +70,7 @@ namespace SiteActionLedger.Controllers
                     .Where(w =>
                         w.ScheduledDate.HasValue &&
                         w.ScheduledDate.Value < today &&
-                        w.Status != "Completed")
+                        w.Status != WorkOrderStatuses.Completed)
                     .OrderBy(w => w.ScheduledDate)
                     .Take(5)
                     .ToListAsync(),
@@ -95,7 +95,7 @@ namespace SiteActionLedger.Controllers
                         UnresolvedIssueCount = _context.ServiceRequests
                             .Count(r =>
                                 r.ProjectId == p.Id &&
-                                r.Status != "Completed")
+                                r.Status != SiteIssueStatuses.Completed)
                     })
                     .ToListAsync()
             };
