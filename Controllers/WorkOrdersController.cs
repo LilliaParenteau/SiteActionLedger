@@ -117,13 +117,6 @@ namespace SiteActionLedger.Controllers
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(workOrder.Notes))
-            {
-                ModelState.AddModelError(
-                    nameof(WorkOrder.Notes),
-                    "Enter work notes.");
-            }
-
             if (!ModelState.IsValid)
             {
                 await LoadServiceRequests(workOrder.ServiceRequestId);
@@ -205,13 +198,6 @@ namespace SiteActionLedger.Controllers
                         "TechnicianId",
                         "Select a valid technician.");
                 }
-            }
-
-            if (string.IsNullOrWhiteSpace(workOrder.Notes))
-            {
-                ModelState.AddModelError(
-                    nameof(WorkOrder.Notes),
-                    "Enter work notes.");
             }
 
             if (workOrder.Status == "Completed" &&

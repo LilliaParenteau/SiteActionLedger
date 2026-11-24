@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -68,17 +69,42 @@ namespace SiteActionLedger.Tests
 
             var issue = await AddIssue(context);
 
-            var controller = new WorkOrdersController(context);
-
-            var result = await controller.Create(new WorkOrder
+            var workOrder = new WorkOrder
             {
                 ServiceRequestId = issue.Id,
                 Notes = ""
-            });
+            };
 
-            Assert.IsType<ViewResult>(result);
+            var validationResults = new List<ValidationResult>();
+
+            bool valid = Validator.TryValidateObject(
+                workOrder,
+                new ValidationContext(workOrder),
+                validationResults,
+                validateAllProperties: true);
+
+            Assert.False(valid);
+
+            Assert.Contains(validationResults, result =>
+                result.MemberNames.Contains(nameof(WorkOrder.Notes)));
+
+            // Simulate the model validation performed by MVC.
+            var controller = new WorkOrdersController(context);
+
+            foreach (var validationResult in validationResults)
+            {
+                foreach (var member in validationResult.MemberNames)
+                {
+                    controller.ModelState.AddModelError(
+                        member,
+                        validationResult.ErrorMessage ?? "Invalid value.");
+                }
+            }
+
+            var actionResult = await controller.Create(workOrder);
+
+            Assert.IsType<ViewResult>(actionResult);
             Assert.False(controller.ModelState.IsValid);
-            Assert.True(controller.ModelState.ContainsKey("Notes"));
             Assert.Equal(0, await context.WorkOrders.CountAsync());
         }
 

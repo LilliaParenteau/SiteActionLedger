@@ -6,7 +6,7 @@ namespace SiteActionLedger.Models
     {
         public int Id { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Select a service request.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Select a site issue.")]
         public int ServiceRequestId { get; set; }
 
         public ServiceRequest? ServiceRequest { get; set; }
@@ -16,6 +16,7 @@ namespace SiteActionLedger.Models
 
         public string Status { get; set; } = "Pending";
 
+        [Required(ErrorMessage = "Enter work notes.")]
         [StringLength(500)]
         public string Notes { get; set; } = "";
 
