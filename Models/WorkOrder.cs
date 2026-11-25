@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SiteActionLedger.Models
 {
@@ -7,9 +8,10 @@ namespace SiteActionLedger.Models
         public int Id { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Select a site issue.")]
-        public int ServiceRequestId { get; set; }
+        [Column("ServiceRequestId")]
+        public int SiteIssueId { get; set; }
 
-        public ServiceRequest? ServiceRequest { get; set; }
+        public SiteIssue? SiteIssue { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? ScheduledDate { get; set; }

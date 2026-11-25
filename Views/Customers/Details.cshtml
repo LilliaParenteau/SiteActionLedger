@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Customer Details";
 
-    var requests = ViewBag.ServiceRequests
-        as List<SiteActionLedger.Models.ServiceRequest>
-        ?? new List<SiteActionLedger.Models.ServiceRequest>();
+    var siteIssues = ViewBag.SiteIssues
+        as List<SiteActionLedger.Models.SiteIssue>
+        ?? new List<SiteActionLedger.Models.SiteIssue>();
 }
 
 <div class="mt-4">
@@ -42,7 +42,7 @@
 
     <h4>Site Issue History</h4>
 
-    @if (!requests.Any())
+    @if (!siteIssues.Any())
     {
         <div class="alert alert-info mt-3">
             This customer has no reported site issues.
@@ -63,17 +63,17 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var request in requests)
+                    @foreach (var issue in siteIssues)
                     {
                         <tr>
-                            <td>@request.Title</td>
+                            <td>@issue.Title</td>
 
                             <td>
-                                @if (request.Priority == "High")
+                                @if (issue.Priority == "High")
                                 {
                                     <span class="badge bg-danger">High</span>
                                 }
-                                else if (request.Priority == "Normal")
+                                else if (issue.Priority == "Normal")
                                 {
                                     <span class="badge bg-primary">Normal</span>
                                 }
@@ -84,13 +84,11 @@
                             </td>
 
                             <td>
-                                @if (request.Status == SiteIssueStatuses.Completed)
+                                @if (issue.Status == SiteIssueStatuses.Completed)
                                 {
-                                    <span class="badge bg-success">
-                                        Completed
-                                    </span>
+                                    <span class="badge bg-success">Completed</span>
                                 }
-                                else if (request.Status == SiteIssueStatuses.InProgress)
+                                else if (issue.Status == SiteIssueStatuses.InProgress)
                                 {
                                     <span class="badge bg-warning text-dark">
                                         In Progress
@@ -98,20 +96,18 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">
-                                        Open
-                                    </span>
+                                    <span class="badge bg-secondary">Open</span>
                                 }
                             </td>
 
                             <td>
-                                @request.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
+                                @issue.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
                             </td>
 
                             <td>
-                                <a asp-controller="ServiceRequests"
+                                <a asp-controller="SiteIssues"
                                    asp-action="Details"
-                                   asp-route-id="@request.Id"
+                                   asp-route-id="@issue.Id"
                                    class="btn btn-sm btn-outline-primary">
                                     Details
                                 </a>

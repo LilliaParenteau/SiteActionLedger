@@ -36,9 +36,9 @@ namespace SiteActionLedger.Controllers
                 return NotFound();
             }
 
-            ViewBag.SiteIssues = await _context.ServiceRequests
-                .Where(r => r.ProjectId == id)
-                .OrderByDescending(r => r.CreatedAt)
+            ViewBag.SiteIssues = await _context.SiteIssues
+                .Where(i => i.ProjectId == id)
+                .OrderByDescending(i => i.CreatedAt)
                 .ToListAsync();
 
             return View(project);
@@ -145,8 +145,8 @@ namespace SiteActionLedger.Controllers
 
             if (existingProject.CustomerId != project.CustomerId)
             {
-                bool hasSiteIssues = await _context.ServiceRequests
-                    .AnyAsync(r => r.ProjectId == id);
+                bool hasSiteIssues = await _context.SiteIssues
+                    .AnyAsync(i => i.ProjectId == id);
 
                 if (hasSiteIssues)
                 {

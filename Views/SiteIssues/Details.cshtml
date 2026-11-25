@@ -1,4 +1,4 @@
-﻿@model SiteActionLedger.Models.ServiceRequest
+﻿@model SiteActionLedger.Models.SiteIssue
 
 @{
     ViewData["Title"] = "Site Issue Details";
@@ -30,9 +30,7 @@
                     }
                     else
                     {
-                        <span class="text-muted">
-                            Not Assigned
-                        </span>
+                        <span class="text-muted">Not Assigned</span>
                     }
                 </dd>
 
@@ -80,21 +78,15 @@
                 <dd class="col-sm-9">
                     @if (Model.Status == SiteIssueStatuses.Completed)
                     {
-                        <span class="badge bg-success">
-                            Completed
-                        </span>
+                        <span class="badge bg-success">Completed</span>
                     }
                     else if (Model.Status == SiteIssueStatuses.InProgress)
                     {
-                        <span class="badge bg-warning text-dark">
-                            In Progress
-                        </span>
+                        <span class="badge bg-warning text-dark">In Progress</span>
                     }
                     else
                     {
-                        <span class="badge bg-secondary">
-                            Open
-                        </span>
+                        <span class="badge bg-secondary">Open</span>
                     }
                 </dd>
 
@@ -129,7 +121,7 @@
 
                 <a asp-controller="WorkOrders"
                    asp-action="Create"
-                   asp-route-serviceRequestId="@Model.Id"
+                   asp-route-siteIssueId="@Model.Id"
                    class="btn btn-outline-primary">
                     Create Work Order
                 </a>

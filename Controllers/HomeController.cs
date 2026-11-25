@@ -28,11 +28,11 @@ namespace SiteActionLedger.Controllers
                 ActiveProjectCount = await _context.Projects
                     .CountAsync(p => p.Status == ProjectStatuses.Active),
 
-                OpenRequestCount = await _context.ServiceRequests
-                    .CountAsync(r => r.Status == SiteIssueStatuses.Open),
+                OpenRequestCount = await _context.SiteIssues
+                    .CountAsync(i => i.Status == SiteIssueStatuses.Open),
 
-                UnresolvedIssueCount = await _context.ServiceRequests
-                    .CountAsync(r => r.Status != SiteIssueStatuses.Completed),
+                UnresolvedIssueCount = await _context.SiteIssues
+                    .CountAsync(i => i.Status != SiteIssueStatuses.Completed),
 
                 ActiveWorkOrderCount = await _context.WorkOrders
                     .CountAsync(w => w.Status != WorkOrderStatuses.Completed),
@@ -43,17 +43,17 @@ namespace SiteActionLedger.Controllers
                         w.ScheduledDate.Value < today &&
                         w.Status != WorkOrderStatuses.Completed),
 
-                RecentRequests = await _context.ServiceRequests
+                RecentRequests = await _context.SiteIssues
                     .AsNoTracking()
-                    .Include(r => r.Customer)
-                    .Include(r => r.Project)
-                    .OrderByDescending(r => r.CreatedAt)
+                    .Include(i => i.Customer)
+                    .Include(i => i.Project)
+                    .OrderByDescending(i => i.CreatedAt)
                     .Take(5)
                     .ToListAsync(),
 
                 UpcomingWorkOrders = await _context.WorkOrders
                     .AsNoTracking()
-                    .Include(w => w.ServiceRequest)
+                    .Include(w => w.SiteIssue)
                     .Include(w => w.Technician)
                     .Where(w =>
                         w.ScheduledDate.HasValue &&
@@ -65,7 +65,7 @@ namespace SiteActionLedger.Controllers
 
                 OverdueWorkOrders = await _context.WorkOrders
                     .AsNoTracking()
-                    .Include(w => w.ServiceRequest)
+                    .Include(w => w.SiteIssue)
                     .Include(w => w.Technician)
                     .Where(w =>
                         w.ScheduledDate.HasValue &&
@@ -89,13 +89,13 @@ namespace SiteActionLedger.Controllers
                             ? p.Customer.Name
                             : "Unknown",
 
-                        TotalIssueCount = _context.ServiceRequests
-                            .Count(r => r.ProjectId == p.Id),
+                        TotalIssueCount = _context.SiteIssues
+                            .Count(i => i.ProjectId == p.Id),
 
-                        UnresolvedIssueCount = _context.ServiceRequests
-                            .Count(r =>
-                                r.ProjectId == p.Id &&
-                                r.Status != SiteIssueStatuses.Completed)
+                        UnresolvedIssueCount = _context.SiteIssues
+                            .Count(i =>
+                                i.ProjectId == p.Id &&
+                                i.Status != SiteIssueStatuses.Completed)
                     })
                     .ToListAsync()
             };

@@ -43,8 +43,8 @@ namespace SiteActionLedger.Controllers
             }
 
             ViewBag.WorkOrders = await _context.WorkOrders
-                .Include(w => w.ServiceRequest)
-                .ThenInclude(r => r!.Customer)
+                .Include(w => w.SiteIssue)
+                .ThenInclude(i => i!.Customer)
                 .Where(w => w.TechnicianId == id)
                 .OrderByDescending(w => w.Id)
                 .ToListAsync();

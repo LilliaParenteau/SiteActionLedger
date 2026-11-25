@@ -18,16 +18,16 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> Index(string? search, string? status)
         {
             var workOrders = _context.WorkOrders
-                .Include(w => w.ServiceRequest)
-                .ThenInclude(r => r!.Customer)
+                .Include(w => w.SiteIssue)
+                    .ThenInclude(i => i!.Customer)
                 .Include(w => w.Technician)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
                 workOrders = workOrders.Where(w =>
-                    w.ServiceRequest!.Title.Contains(search) ||
-                    w.ServiceRequest.Customer!.Name.Contains(search) ||
+                    w.SiteIssue!.Title.Contains(search) ||
+                    w.SiteIssue.Customer!.Name.Contains(search) ||
                     (w.Technician != null &&
                      w.Technician.Name.Contains(search)));
             }
@@ -50,8 +50,8 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var workOrder = await _context.WorkOrders
-                .Include(w => w.ServiceRequest)
-                .ThenInclude(r => r!.Customer)
+                .Include(w => w.SiteIssue)
+                    .ThenInclude(i => i!.Customer)
                 .Include(w => w.Technician)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
@@ -63,70 +63,66 @@ namespace SiteActionLedger.Controllers
             return View(workOrder);
         }
 
-        public async Task<IActionResult> Create(int? serviceRequestId)
+        public async Task<IActionResult> Create(int? siteIssueId)
         {
-            await LoadServiceRequests(serviceRequestId);
+            await LoadSiteIssues(siteIssueId);
             await LoadTechnicians();
 
-            var workOrder = new WorkOrder
+            return View(new WorkOrder
             {
-                ServiceRequestId = serviceRequestId ?? 0
-            };
-
-            return View(workOrder);
+                SiteIssueId = siteIssueId ?? 0
+            });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("ServiceRequestId,ScheduledDate,Notes,TechnicianId")]
+            [Bind("SiteIssueId,ScheduledDate,Notes,TechnicianId")]
             WorkOrder workOrder)
         {
-            var request = await _context.ServiceRequests
-                .FindAsync(workOrder.ServiceRequestId);
+            var issue = await _context.SiteIssues
+                .FindAsync(workOrder.SiteIssueId);
 
-            if (request == null)
+            if (issue == null)
             {
                 ModelState.AddModelError(
-                    "ServiceRequestId",
-                    "Select a valid service request.");
+                    nameof(WorkOrder.SiteIssueId),
+                    "Select a valid site issue.");
             }
 
             bool alreadyAssigned = await _context.WorkOrders
-                .AnyAsync(w =>
-                    w.ServiceRequestId == workOrder.ServiceRequestId);
+                .AnyAsync(w => w.SiteIssueId == workOrder.SiteIssueId);
 
             if (alreadyAssigned)
             {
                 ModelState.AddModelError(
-                    "ServiceRequestId",
-                    "This request already has a work order.");
+                    nameof(WorkOrder.SiteIssueId),
+                    "This site issue already has a work order.");
             }
 
             if (workOrder.TechnicianId.HasValue)
             {
                 bool technicianExists = await _context.Technicians
-                    .AnyAsync(t =>
-                        t.Id == workOrder.TechnicianId.Value);
+                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
 
                 if (!technicianExists)
                 {
                     ModelState.AddModelError(
-                        "TechnicianId",
+                        nameof(WorkOrder.TechnicianId),
                         "Select a valid technician.");
                 }
             }
 
             if (!ModelState.IsValid)
             {
-                await LoadServiceRequests(workOrder.ServiceRequestId);
+                await LoadSiteIssues(workOrder.SiteIssueId);
                 await LoadTechnicians();
 
                 return View(workOrder);
             }
 
             workOrder.Status = WorkOrderStatuses.Pending;
-            request!.Status = SiteIssueStatuses.Open;
+            issue!.Status = SiteIssueStatuses.Open;
 
             _context.WorkOrders.Add(workOrder);
             await _context.SaveChangesAsync();
@@ -137,8 +133,8 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var workOrder = await _context.WorkOrders
-                .Include(w => w.ServiceRequest)
-                .ThenInclude(r => r!.Customer)
+                .Include(w => w.SiteIssue)
+                    .ThenInclude(i => i!.Customer)
                 .Include(w => w.Technician)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
@@ -158,8 +154,8 @@ namespace SiteActionLedger.Controllers
         public async Task<IActionResult> EditPost(int id)
         {
             var workOrder = await _context.WorkOrders
-                .Include(w => w.ServiceRequest)
-                .ThenInclude(r => r!.Customer)
+                .Include(w => w.SiteIssue)
+                    .ThenInclude(i => i!.Customer)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (workOrder == null)
@@ -182,20 +178,19 @@ namespace SiteActionLedger.Controllers
                 workOrder.Status != WorkOrderStatuses.Completed)
             {
                 ModelState.AddModelError(
-                    "Status",
+                    nameof(WorkOrder.Status),
                     "Select a valid status.");
             }
 
             if (workOrder.TechnicianId.HasValue)
             {
                 bool technicianExists = await _context.Technicians
-                    .AnyAsync(t =>
-                        t.Id == workOrder.TechnicianId.Value);
+                    .AnyAsync(t => t.Id == workOrder.TechnicianId.Value);
 
                 if (!technicianExists)
                 {
                     ModelState.AddModelError(
-                        "TechnicianId",
+                        nameof(WorkOrder.TechnicianId),
                         "Select a valid technician.");
                 }
             }
@@ -204,7 +199,7 @@ namespace SiteActionLedger.Controllers
                 string.IsNullOrWhiteSpace(workOrder.ResolutionNotes))
             {
                 ModelState.AddModelError(
-                    "ResolutionNotes",
+                    nameof(WorkOrder.ResolutionNotes),
                     "Enter resolution notes before completing the work order.");
             }
 
@@ -227,19 +222,19 @@ namespace SiteActionLedger.Controllers
                 workOrder.CompletedAt = null;
             }
 
-            if (workOrder.ServiceRequest != null)
+            if (workOrder.SiteIssue != null)
             {
                 if (workOrder.Status == WorkOrderStatuses.Pending)
                 {
-                    workOrder.ServiceRequest.Status = SiteIssueStatuses.Open;
+                    workOrder.SiteIssue.Status = SiteIssueStatuses.Open;
                 }
                 else if (workOrder.Status == WorkOrderStatuses.InProgress)
                 {
-                    workOrder.ServiceRequest.Status = SiteIssueStatuses.InProgress;
+                    workOrder.SiteIssue.Status = SiteIssueStatuses.InProgress;
                 }
-                else if (workOrder.Status == WorkOrderStatuses.Completed)
+                else
                 {
-                    workOrder.ServiceRequest.Status = SiteIssueStatuses.Completed;
+                    workOrder.SiteIssue.Status = SiteIssueStatuses.Completed;
                 }
             }
 
@@ -248,19 +243,19 @@ namespace SiteActionLedger.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task LoadServiceRequests(int? selectedId = null)
+        private async Task LoadSiteIssues(int? selectedId = null)
         {
             var assignedIds = await _context.WorkOrders
-                .Select(w => w.ServiceRequestId)
+                .Select(w => w.SiteIssueId)
                 .ToListAsync();
 
-            var requests = await _context.ServiceRequests
-                .Where(r => !assignedIds.Contains(r.Id))
-                .OrderBy(r => r.Title)
+            var issues = await _context.SiteIssues
+                .Where(i => !assignedIds.Contains(i.Id))
+                .OrderBy(i => i.Title)
                 .ToListAsync();
 
-            ViewBag.ServiceRequests = new SelectList(
-                requests, "Id", "Title", selectedId);
+            ViewBag.SiteIssues = new SelectList(
+                issues, "Id", "Title", selectedId);
         }
 
         private async Task LoadTechnicians()

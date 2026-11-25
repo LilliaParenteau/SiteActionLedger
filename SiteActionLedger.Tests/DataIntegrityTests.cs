@@ -125,7 +125,7 @@ namespace SiteActionLedger.Tests
             context.Projects.Add(project);
             await context.SaveChangesAsync();
 
-            context.ServiceRequests.Add(new ServiceRequest
+            context.SiteIssues.Add(new SiteIssue
             {
                 Title = "Electrical Issue",
                 Description = "Wiring needs inspection.",

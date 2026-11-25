@@ -49,19 +49,19 @@ namespace SiteActionLedger.Tests
             context.Technicians.Add(technician);
             await context.SaveChangesAsync();
 
-            var request = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Electrical Inspection",
                 Description = "Inspect exposed wiring.",
                 CustomerId = customer.Id
             };
 
-            context.ServiceRequests.Add(request);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             context.WorkOrders.Add(new WorkOrder
             {
-                ServiceRequestId = request.Id,
+                SiteIssueId = issue.Id,
                 TechnicianId = technician.Id,
                 Status = "Pending"
             });
@@ -124,19 +124,19 @@ namespace SiteActionLedger.Tests
             context.Customers.Add(customer);
             await context.SaveChangesAsync();
 
-            var request = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Damaged Ceiling",
                 Description = "Ceiling tiles need replacement.",
                 CustomerId = customer.Id
             };
 
-            context.ServiceRequests.Add(request);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             context.WorkOrders.Add(new WorkOrder
             {
-                ServiceRequestId = request.Id,
+                SiteIssueId = issue.Id,
                 Status = "Pending"
             });
 
@@ -146,14 +146,14 @@ namespace SiteActionLedger.Tests
 
             var result = await controller.Create(new WorkOrder
             {
-                ServiceRequestId = request.Id
+                SiteIssueId = issue.Id
             });
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
 
             Assert.Equal(1, await context.WorkOrders
-                .CountAsync(w => w.ServiceRequestId == request.Id));
+                .CountAsync(w => w.SiteIssueId == issue.Id));
         }
 
         [Fact]
@@ -174,21 +174,21 @@ namespace SiteActionLedger.Tests
             context.Customers.Add(customer);
             await context.SaveChangesAsync();
 
-            var request = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "HVAC Repair",
                 Description = "Inspect damaged ductwork.",
                 CustomerId = customer.Id
             };
 
-            context.ServiceRequests.Add(request);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             var controller = new WorkOrdersController(context);
 
             var result = await controller.Create(new WorkOrder
             {
-                ServiceRequestId = request.Id,
+                SiteIssueId = issue.Id,
                 TechnicianId = 9999
             });
 
@@ -216,7 +216,7 @@ namespace SiteActionLedger.Tests
             context.Customers.Add(customer);
             await context.SaveChangesAsync();
 
-            var request = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Water Leak",
                 Description = "Leak found in mechanical room.",
@@ -224,14 +224,14 @@ namespace SiteActionLedger.Tests
                 Status = "In Progress"
             };
 
-            context.ServiceRequests.Add(request);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             var controller = new WorkOrdersController(context);
 
             var result = await controller.Create(new WorkOrder
             {
-                ServiceRequestId = request.Id,
+                SiteIssueId = issue.Id,
                 ScheduledDate = DateTime.Today.AddDays(2),
                 Notes = "Inspect the water line.",
                 Status = "Completed"
@@ -240,16 +240,16 @@ namespace SiteActionLedger.Tests
             Assert.IsType<RedirectToActionResult>(result);
 
             var savedOrder = await context.WorkOrders
-                .FirstOrDefaultAsync(w => w.ServiceRequestId == request.Id);
+                .FirstOrDefaultAsync(w => w.SiteIssueId == issue.Id);
 
             Assert.NotNull(savedOrder);
             Assert.Equal("Pending", savedOrder.Status);
 
-            var savedRequest = await context.ServiceRequests
-                .FindAsync(request.Id);
+            var savedIssue = await context.SiteIssues
+                .FindAsync(issue.Id);
 
-            Assert.NotNull(savedRequest);
-            Assert.Equal("Open", savedRequest.Status);
+            Assert.NotNull(savedIssue);
+            Assert.Equal("Open", savedIssue.Status);
         }
     }
 }

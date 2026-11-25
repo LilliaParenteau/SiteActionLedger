@@ -30,7 +30,7 @@ namespace SiteActionLedger.Tests
             return context;
         }
 
-        private static async Task<ServiceRequest> AddIssue(
+        private static async Task<SiteIssue> AddIssue(
             SiteActionLedgerContext context)
         {
             var customer = new Customer
@@ -44,14 +44,14 @@ namespace SiteActionLedger.Tests
             context.Customers.Add(customer);
             await context.SaveChangesAsync();
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Electrical Inspection",
                 Description = "Inspect exposed wiring.",
                 CustomerId = customer.Id
             };
 
-            context.ServiceRequests.Add(issue);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             return issue;
@@ -71,7 +71,7 @@ namespace SiteActionLedger.Tests
 
             var workOrder = new WorkOrder
             {
-                ServiceRequestId = issue.Id,
+                SiteIssueId = issue.Id,
                 Notes = ""
             };
 
@@ -122,7 +122,7 @@ namespace SiteActionLedger.Tests
 
             var order = new WorkOrder
             {
-                ServiceRequestId = issue.Id,
+                SiteIssueId = issue.Id,
                 Status = "Pending",
                 Notes = "Inspect the electrical wiring."
             };

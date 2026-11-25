@@ -16,7 +16,7 @@
 
         public int OverdueWorkOrderCount { get; set; }
 
-        public List<ServiceRequest> RecentRequests { get; set; } = new();
+        public List<SiteIssue> RecentRequests { get; set; } = new();
 
         public List<WorkOrder> UpcomingWorkOrders { get; set; } = new();
 

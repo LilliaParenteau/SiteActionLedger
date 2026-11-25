@@ -20,16 +20,16 @@
             <dl class="row">
                 <dt class="col-sm-3">Site Issue</dt>
                 <dd class="col-sm-9">
-                    <a asp-controller="ServiceRequests"
+                    <a asp-controller="SiteIssues"
                        asp-action="Details"
-                       asp-route-id="@Model.ServiceRequestId">
-                        @Model.ServiceRequest?.Title
+                       asp-route-id="@Model.SiteIssueId">
+                        @Model.SiteIssue?.Title
                     </a>
                 </dd>
 
                 <dt class="col-sm-3">Client</dt>
                 <dd class="col-sm-9">
-                    @Model.ServiceRequest?.Customer?.Name
+                    @Model.SiteIssue?.Customer?.Name
                 </dd>
 
                 <dt class="col-sm-3">Assigned Technician</dt>
@@ -52,21 +52,15 @@
                 <dd class="col-sm-9">
                     @if (Model.Status == WorkOrderStatuses.Completed)
                     {
-                        <span class="badge bg-success">
-                            Completed
-                        </span>
+                        <span class="badge bg-success">Completed</span>
                     }
                     else if (Model.Status == WorkOrderStatuses.InProgress)
                     {
-                        <span class="badge bg-warning text-dark">
-                            In Progress
-                        </span>
+                        <span class="badge bg-warning text-dark">In Progress</span>
                     }
                     else
                     {
-                        <span class="badge bg-secondary">
-                            Pending
-                        </span>
+                        <span class="badge bg-secondary">Pending</span>
                     }
                 </dd>
 

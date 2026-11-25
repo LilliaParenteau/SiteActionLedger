@@ -56,12 +56,12 @@ namespace SiteActionLedger.Tests
             return project;
         }
 
-        private static async Task<ServiceRequest> AddIssue(
+        private static async Task<SiteIssue> AddIssue(
             SiteActionLedgerContext context,
             Project project,
             string status = "Open")
         {
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Electrical Inspection",
                 Description = "Inspect exposed wiring.",
@@ -73,7 +73,7 @@ namespace SiteActionLedger.Tests
                 ProjectId = project.Id
             };
 
-            context.ServiceRequests.Add(issue);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             return issue;
@@ -89,7 +89,7 @@ namespace SiteActionLedger.Tests
             return services.BuildServiceProvider();
         }
 
-        private static ServiceRequestsController CreateController(
+        private static SiteIssuesController CreateController(
             SiteActionLedgerContext context,
             IServiceProvider services,
             string action,
@@ -108,10 +108,10 @@ namespace SiteActionLedger.Tests
                 formValues ?? new Dictionary<string, StringValues>());
 
             var routeData = new RouteData();
-            routeData.Values["controller"] = "ServiceRequests";
+            routeData.Values["controller"] = "SiteIssues";
             routeData.Values["action"] = action;
 
-            return new ServiceRequestsController(context)
+            return new SiteIssuesController(context)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -119,7 +119,7 @@ namespace SiteActionLedger.Tests
                     RouteData = routeData,
                     ActionDescriptor = new ControllerActionDescriptor
                     {
-                        ControllerName = "ServiceRequests",
+                        ControllerName = "SiteIssues",
                         ActionName = action
                     },
                     ValueProviderFactories =
@@ -162,7 +162,7 @@ namespace SiteActionLedger.Tests
             var controller = CreateController(
                 context, services, "Create");
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Exposed Wiring",
                 Description = "Wiring requires inspection.",
@@ -177,7 +177,7 @@ namespace SiteActionLedger.Tests
 
             Assert.IsType<RedirectToActionResult>(result);
 
-            var savedIssue = await context.ServiceRequests
+            var savedIssue = await context.SiteIssues
                 .SingleAsync();
 
             Assert.Equal(project.Id, savedIssue.ProjectId);
@@ -206,7 +206,7 @@ namespace SiteActionLedger.Tests
             var controller = CreateController(
                 context, services, "Create");
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Site Inspection",
                 Description = "Inspection required.",
@@ -217,7 +217,7 @@ namespace SiteActionLedger.Tests
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
-            Assert.Equal(0, await context.ServiceRequests.CountAsync());
+            Assert.Equal(0, await context.SiteIssues.CountAsync());
         }
 
         [Fact]
@@ -236,7 +236,7 @@ namespace SiteActionLedger.Tests
             var controller = CreateController(
                 context, services, "Create");
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Electrical Inspection",
                 Description = "Inspect the wiring.",
@@ -248,7 +248,7 @@ namespace SiteActionLedger.Tests
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
-            Assert.Equal(0, await context.ServiceRequests.CountAsync());
+            Assert.Equal(0, await context.SiteIssues.CountAsync());
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace SiteActionLedger.Tests
             var controller = CreateController(
                 context, services, "Create");
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Plumbing Inspection",
                 Description = "Inspect water connections.",
@@ -280,7 +280,7 @@ namespace SiteActionLedger.Tests
 
             Assert.IsType<ViewResult>(result);
             Assert.False(controller.ModelState.IsValid);
-            Assert.Equal(0, await context.ServiceRequests.CountAsync());
+            Assert.Equal(0, await context.SiteIssues.CountAsync());
         }
 
         [Fact]
@@ -301,7 +301,7 @@ namespace SiteActionLedger.Tests
 
             context.WorkOrders.Add(new WorkOrder
             {
-                ServiceRequestId = issue.Id,
+                SiteIssueId = issue.Id,
                 Status = "In Progress",
                 Notes = "Repairs underway."
             });

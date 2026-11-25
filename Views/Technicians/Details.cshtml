@@ -73,9 +73,9 @@
                         <tr>
                             <td>#@order.Id</td>
 
-                            <td>@order.ServiceRequest?.Title</td>
+                            <td>@order.SiteIssue?.Title</td>
 
-                            <td>@order.ServiceRequest?.Customer?.Name</td>
+                            <td>@order.SiteIssue?.Customer?.Name</td>
 
                             <td>
                                 @(order.ScheduledDate?.ToString("MM/dd/yyyy")

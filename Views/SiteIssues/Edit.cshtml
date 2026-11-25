@@ -1,4 +1,4 @@
-﻿@model SiteActionLedger.Models.ServiceRequest
+﻿@model SiteActionLedger.Models.SiteIssue
 
 @{
     ViewData["Title"] = "Edit Site Issue";
@@ -28,7 +28,7 @@
             <select asp-for="ProjectId"
                     asp-items="ViewBag.Projects"
                     class="form-select">
-                <option value="">Not Assigned</option>
+                <option value="">Select a project</option>
             </select>
 
             <span asp-validation-for="ProjectId"
@@ -120,6 +120,7 @@
 
                 <div class="form-text">
                     This issue's status is managed through its work order.
+
                     <a asp-controller="WorkOrders"
                        asp-action="Edit"
                        asp-route-id="@ViewBag.LinkedWorkOrderId">

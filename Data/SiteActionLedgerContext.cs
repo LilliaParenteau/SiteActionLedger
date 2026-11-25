@@ -12,7 +12,7 @@ namespace SiteActionLedger.Data
         }
 
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<ServiceRequest> ServiceRequests { get; set; }
+        public DbSet<SiteIssue> SiteIssues { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<Technician> Technicians { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -25,28 +25,31 @@ namespace SiteActionLedger.Data
             modelBuilder.Entity<Project>()
                 .ToTable("Projects");
 
+            modelBuilder.Entity<SiteIssue>()
+                .ToTable("ServiceRequests");
+
             modelBuilder.Entity<Project>()
                 .HasOne(p => p.Customer)
                 .WithMany()
                 .HasForeignKey(p => p.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ServiceRequest>()
-                .HasOne(r => r.Customer)
+            modelBuilder.Entity<SiteIssue>()
+                .HasOne(i => i.Customer)
                 .WithMany()
-                .HasForeignKey(r => r.CustomerId)
+                .HasForeignKey(i => i.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ServiceRequest>()
-                .HasOne(r => r.Project)
+            modelBuilder.Entity<SiteIssue>()
+                .HasOne(i => i.Project)
                 .WithMany()
-                .HasForeignKey(r => r.ProjectId)
+                .HasForeignKey(i => i.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkOrder>()
-                .HasOne(w => w.ServiceRequest)
+                .HasOne(w => w.SiteIssue)
                 .WithOne()
-                .HasForeignKey<WorkOrder>(w => w.ServiceRequestId)
+                .HasForeignKey<WorkOrder>(w => w.SiteIssueId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkOrder>()

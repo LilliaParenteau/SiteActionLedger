@@ -48,7 +48,7 @@
                         @Model.UnresolvedIssueCount
                     </h2>
 
-                    <a asp-controller="ServiceRequests"
+                    <a asp-controller="SiteIssues"
                        asp-action="Index"
                        class="btn btn-outline-primary mt-auto">
                         View Site Issues
@@ -140,7 +140,7 @@
                         @Model.OpenRequestCount
                     </h2>
 
-                    <a asp-controller="ServiceRequests"
+                    <a asp-controller="SiteIssues"
                        asp-action="Index"
                        asp-route-status="@SiteIssueStatuses.Open"
                        class="btn btn-outline-primary mt-auto">
@@ -262,7 +262,7 @@
                                     {
                                         <tr>
                                             <td>
-                                                <a asp-controller="ServiceRequests"
+                                                <a asp-controller="SiteIssues"
                                                    asp-action="Details"
                                                    asp-route-id="@issue.Id">
                                                     @issue.Title
@@ -335,7 +335,7 @@
                                                 <a asp-controller="WorkOrders"
                                                    asp-action="Details"
                                                    asp-route-id="@order.Id">
-                                                    @order.ServiceRequest?.Title
+                                                    @order.SiteIssue?.Title
                                                 </a>
                                             </td>
 
@@ -388,7 +388,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @order.ServiceRequest?.Title
+                                        @order.SiteIssue?.Title
                                     </td>
 
                                     <td>

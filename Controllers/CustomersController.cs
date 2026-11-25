@@ -43,9 +43,9 @@ namespace SiteActionLedger.Controllers
                 return NotFound();
             }
 
-            ViewBag.ServiceRequests = await _context.ServiceRequests
-                .Where(r => r.CustomerId == id)
-                .OrderByDescending(r => r.CreatedAt)
+            ViewBag.SiteIssues = await _context.SiteIssues
+                .Where(i => i.CustomerId == id)
+                .OrderByDescending(i => i.CreatedAt)
                 .ToListAsync();
 
             return View(customer);
@@ -139,13 +139,13 @@ namespace SiteActionLedger.Controllers
                 return NotFound();
             }
 
-            bool hasRequests = await _context.ServiceRequests
-                .AnyAsync(r => r.CustomerId == id);
+            bool hasSiteIssues = await _context.SiteIssues
+                .AnyAsync(i => i.CustomerId == id);
 
             bool hasProjects = await _context.Projects
                 .AnyAsync(p => p.CustomerId == id);
 
-            if (hasRequests || hasProjects)
+            if (hasSiteIssues || hasProjects)
             {
                 ModelState.AddModelError(
                     "",

@@ -4,8 +4,8 @@
     ViewData["Title"] = "Project Details";
 
     var siteIssues = ViewBag.SiteIssues
-        as List<SiteActionLedger.Models.ServiceRequest>
-        ?? new List<SiteActionLedger.Models.ServiceRequest>();
+        as List<SiteActionLedger.Models.SiteIssue>
+        ?? new List<SiteActionLedger.Models.SiteIssue>();
 }
 
 <div class="mt-4">
@@ -67,7 +67,7 @@
                     Site Issues (@siteIssues.Count)
                 </h5>
 
-                <a asp-controller="ServiceRequests"
+                <a asp-controller="SiteIssues"
                    asp-action="Create"
                    asp-route-projectId="@Model.Id"
                    class="btn btn-primary btn-sm">
@@ -127,7 +127,7 @@
                                     </td>
 
                                     <td>
-                                        <a asp-controller="ServiceRequests"
+                                        <a asp-controller="SiteIssues"
                                            asp-action="Details"
                                            asp-route-id="@issue.Id"
                                            class="btn btn-sm btn-outline-primary">

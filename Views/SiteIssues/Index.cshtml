@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SiteActionLedger.Models.ServiceRequest>
+﻿@model IEnumerable<SiteActionLedger.Models.SiteIssue>
 
 @{
     ViewData["Title"] = "Site Issues";
@@ -132,18 +132,18 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var request in Model)
+                    @foreach (var issue in Model)
                     {
                         <tr>
-                            <td>@request.Title</td>
+                            <td>@issue.Title</td>
 
                             <td>
-                                @if (request.Project != null)
+                                @if (issue.Project != null)
                                 {
                                     <a asp-controller="Projects"
                                        asp-action="Details"
-                                       asp-route-id="@request.ProjectId">
-                                        @request.Project.Name
+                                       asp-route-id="@issue.ProjectId">
+                                        @issue.Project.Name
                                     </a>
                                 }
                                 else
@@ -154,49 +154,41 @@
                                 }
                             </td>
 
-                            <td>@request.Customer?.Name</td>
+                            <td>@issue.Customer?.Name</td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(request.Category)
+                                @(string.IsNullOrWhiteSpace(issue.Category)
                                     ? "Not Specified"
-                                    : request.Category)
+                                    : issue.Category)
                             </td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(request.SiteArea)
+                                @(string.IsNullOrWhiteSpace(issue.SiteArea)
                                     ? "Not Specified"
-                                    : request.SiteArea)
+                                    : issue.SiteArea)
                             </td>
 
                             <td>
-                                @if (request.Priority == "High")
+                                @if (issue.Priority == "High")
                                 {
-                                    <span class="badge bg-danger">
-                                        High
-                                    </span>
+                                    <span class="badge bg-danger">High</span>
                                 }
-                                else if (request.Priority == "Normal")
+                                else if (issue.Priority == "Normal")
                                 {
-                                    <span class="badge bg-primary">
-                                        Normal
-                                    </span>
+                                    <span class="badge bg-primary">Normal</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">
-                                        Low
-                                    </span>
+                                    <span class="badge bg-secondary">Low</span>
                                 }
                             </td>
 
                             <td>
-                                @if (request.Status == SiteIssueStatuses.Completed)
+                                @if (issue.Status == SiteIssueStatuses.Completed)
                                 {
-                                    <span class="badge bg-success">
-                                        Completed
-                                    </span>
+                                    <span class="badge bg-success">Completed</span>
                                 }
-                                else if (request.Status == SiteIssueStatuses.InProgress)
+                                else if (issue.Status == SiteIssueStatuses.InProgress)
                                 {
                                     <span class="badge bg-warning text-dark">
                                         In Progress
@@ -204,25 +196,23 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">
-                                        Open
-                                    </span>
+                                    <span class="badge bg-secondary">Open</span>
                                 }
                             </td>
 
                             <td>
-                                @request.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
+                                @issue.CreatedAt.ToLocalTime().ToString("MM/dd/yyyy")
                             </td>
 
                             <td>
                                 <a asp-action="Details"
-                                   asp-route-id="@request.Id"
+                                   asp-route-id="@issue.Id"
                                    class="btn btn-sm btn-outline-primary">
                                     Details
                                 </a>
 
                                 <a asp-action="Edit"
-                                   asp-route-id="@request.Id"
+                                   asp-route-id="@issue.Id"
                                    class="btn btn-sm btn-outline-secondary">
                                     Edit
                                 </a>

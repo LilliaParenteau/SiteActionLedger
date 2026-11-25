@@ -1,4 +1,4 @@
-﻿@model SiteActionLedger.Models.ServiceRequest
+﻿@model SiteActionLedger.Models.SiteIssue
 
 @{
     ViewData["Title"] = "Report Site Issue";
@@ -8,11 +8,10 @@
     <h1>Report Site Issue</h1>
 
     <p class="text-muted">
-        Record an issue found at a construction project.
+        Record an issue identified at a construction project.
     </p>
 
     <form asp-action="Create" method="post">
-
         <div asp-validation-summary="ModelOnly"
              class="text-danger mb-3"></div>
 
@@ -36,8 +35,7 @@
                 Issue Title
             </label>
 
-            <input asp-for="Title"
-                   class="form-control" />
+            <input asp-for="Title" class="form-control" />
 
             <span asp-validation-for="Title"
                   class="text-danger"></span>
@@ -111,7 +109,6 @@
         <a asp-action="Index" class="btn btn-secondary">
             Cancel
         </a>
-
     </form>
 </div>
 

@@ -15,14 +15,14 @@
         <div class="card-body">
             <h5>Associated Site Issue</h5>
 
-            <a asp-controller="ServiceRequests"
+            <a asp-controller="SiteIssues"
                asp-action="Details"
-               asp-route-id="@Model.ServiceRequestId">
-                @Model.ServiceRequest?.Title
+               asp-route-id="@Model.SiteIssueId">
+                @Model.SiteIssue?.Title
             </a>
 
             <p class="text-muted mb-0 mt-2">
-                Client: @Model.ServiceRequest?.Customer?.Name
+                Client: @Model.SiteIssue?.Customer?.Name
             </p>
         </div>
     </div>

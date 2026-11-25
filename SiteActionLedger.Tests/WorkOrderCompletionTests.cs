@@ -24,7 +24,6 @@ namespace SiteActionLedger.Tests
                 .Options;
 
             var context = new SiteActionLedgerContext(options);
-
             context.Database.EnsureCreated();
 
             return context;
@@ -47,7 +46,7 @@ namespace SiteActionLedger.Tests
             context.Customers.Add(customer);
             await context.SaveChangesAsync();
 
-            var issue = new ServiceRequest
+            var issue = new SiteIssue
             {
                 Title = "Exposed Wiring",
                 Description = "Electrical wiring requires inspection.",
@@ -55,12 +54,12 @@ namespace SiteActionLedger.Tests
                 Status = status == "Pending" ? "Open" : status
             };
 
-            context.ServiceRequests.Add(issue);
+            context.SiteIssues.Add(issue);
             await context.SaveChangesAsync();
 
             var order = new WorkOrder
             {
-                ServiceRequestId = issue.Id,
+                SiteIssueId = issue.Id,
                 Status = status,
                 Notes = "Inspect the wiring.",
                 ResolutionNotes = resolutionNotes,
@@ -101,7 +100,7 @@ namespace SiteActionLedger.Tests
             routeData.Values["controller"] = "WorkOrders";
             routeData.Values["action"] = "Edit";
 
-            var controller = new WorkOrdersController(context)
+            return new WorkOrdersController(context)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -119,8 +118,6 @@ namespace SiteActionLedger.Tests
                         }
                 }
             };
-
-            return controller;
         }
 
         private static ServiceProvider CreateServices()
@@ -147,10 +144,7 @@ namespace SiteActionLedger.Tests
             var ids = await AddWorkOrder(context, "Pending");
 
             var controller = CreateController(
-                context,
-                services,
-                "Completed",
-                "");
+                context, services, "Completed", "");
 
             var result = await controller.EditPost(ids.OrderId);
 
@@ -163,7 +157,7 @@ namespace SiteActionLedger.Tests
             Assert.Equal("Pending", order!.Status);
             Assert.Null(order.CompletedAt);
 
-            var issue = await context.ServiceRequests.FindAsync(ids.IssueId);
+            var issue = await context.SiteIssues.FindAsync(ids.IssueId);
             await context.Entry(issue!).ReloadAsync();
 
             Assert.Equal("Open", issue!.Status);
@@ -198,7 +192,6 @@ namespace SiteActionLedger.Tests
 
             Assert.NotNull(order);
             Assert.Equal("Completed", order.Status);
-
             Assert.Equal(
                 "Repaired and inspected the electrical wiring.",
                 order.ResolutionNotes);
@@ -210,7 +203,7 @@ namespace SiteActionLedger.Tests
                 beforeSave,
                 DateTime.UtcNow.AddSeconds(5));
 
-            var issue = await context.ServiceRequests.FindAsync(ids.IssueId);
+            var issue = await context.SiteIssues.FindAsync(ids.IssueId);
 
             Assert.NotNull(issue);
             Assert.Equal("Completed", issue.Status);
@@ -286,7 +279,7 @@ namespace SiteActionLedger.Tests
             Assert.Equal("In Progress", order.Status);
             Assert.Null(order.CompletedAt);
 
-            var issue = await context.ServiceRequests.FindAsync(ids.IssueId);
+            var issue = await context.SiteIssues.FindAsync(ids.IssueId);
 
             Assert.NotNull(issue);
             Assert.Equal("In Progress", issue.Status);

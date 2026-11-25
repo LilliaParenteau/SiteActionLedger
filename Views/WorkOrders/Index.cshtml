@@ -87,14 +87,14 @@
                             <td>#@order.Id</td>
 
                             <td>
-                                <a asp-controller="ServiceRequests"
+                                <a asp-controller="SiteIssues"
                                    asp-action="Details"
-                                   asp-route-id="@order.ServiceRequestId">
-                                    @order.ServiceRequest?.Title
+                                   asp-route-id="@order.SiteIssueId">
+                                    @order.SiteIssue?.Title
                                 </a>
                             </td>
 
-                            <td>@order.ServiceRequest?.Customer?.Name</td>
+                            <td>@order.SiteIssue?.Customer?.Name</td>
 
                             <td>
                                 @if (order.Technician != null)

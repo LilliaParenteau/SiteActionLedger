@@ -2,7 +2,7 @@
 
 namespace SiteActionLedger.Models
 {
-    public class ServiceRequest
+    public class SiteIssue
     {
         public int Id { get; set; }
 
@@ -26,7 +26,7 @@ namespace SiteActionLedger.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        [Range(1, int.MaxValue, ErrorMessage = "Select a customer.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Select a client.")]
         public int CustomerId { get; set; }
 
         public Customer? Customer { get; set; }
