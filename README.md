@@ -107,7 +107,7 @@ dotnet test SiteActionTrace.Tests/SiteActionTrace.Tests.csproj
 
 ## Demonstration Data
 
-The customers, projects, job sites, technicians, site issues, and work orders shown in the screenshots are fictional examples created for demonstration purposes. They are not intended to represent actual businesses, individuals, properties, or construction incidents.
+All demonstration records, including those appearing in earlier versions of this repository, were created for software testing and demonstration purposes. Any resemblance to actual individuals, businesses, properties, or incidents is coincidental.
 
 ## Project Scope
 
