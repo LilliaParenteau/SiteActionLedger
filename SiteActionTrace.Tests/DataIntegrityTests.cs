@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Controllers;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Controllers;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 using Xunit;
 
-namespace SiteActionLedger.Tests
+namespace SiteActionTrace.Tests
 {
     public class DataIntegrityTests
     {
-        private static SiteActionLedgerContext CreateContext(
+        private static SiteActionTraceContext CreateContext(
             SqliteConnection connection)
         {
-            var options = new DbContextOptionsBuilder<SiteActionLedgerContext>()
+            var options = new DbContextOptionsBuilder<SiteActionTraceContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            var context = new SiteActionLedgerContext(options);
+            var context = new SiteActionTraceContext(options);
 
             context.Database.EnsureCreated();
 
@@ -34,9 +34,9 @@ namespace SiteActionLedger.Tests
 
             var customer = new Customer
             {
-                Name = "Harbor Construction",
+                Name = "Demo Client A",
                 Email = "harbor@example.com",
-                Address = "100 Main Street"
+                Address = "Demo Address 01"
             };
 
             context.Customers.Add(customer);
@@ -45,7 +45,7 @@ namespace SiteActionLedger.Tests
             context.Projects.Add(new Project
             {
                 Name = "Office Renovation",
-                SiteAddress = "200 Main Street",
+                SiteAddress = "Demo Address 02",
                 CustomerId = customer.Id
             });
 
@@ -74,7 +74,7 @@ namespace SiteActionLedger.Tests
             {
                 Name = "Test Customer",
                 Email = "test@example.com",
-                Address = "300 Main Street"
+                Address = "Demo Address 03"
             };
 
             context.Customers.Add(customer);
@@ -102,14 +102,14 @@ namespace SiteActionLedger.Tests
             {
                 Name = "Original Client",
                 Email = "original@example.com",
-                Address = "100 First Street"
+                Address = "Demo Address 05"
             };
 
             var newClient = new Customer
             {
                 Name = "New Client",
                 Email = "new@example.com",
-                Address = "200 Second Street"
+                Address = "Demo Address 06"
             };
 
             context.Customers.AddRange(originalClient, newClient);
@@ -118,7 +118,7 @@ namespace SiteActionLedger.Tests
             var project = new Project
             {
                 Name = "Office Construction",
-                SiteAddress = "500 Project Road",
+                SiteAddress = "Demo Site 05",
                 CustomerId = originalClient.Id
             };
 
@@ -169,14 +169,14 @@ namespace SiteActionLedger.Tests
             {
                 Name = "Original Client",
                 Email = "original@example.com",
-                Address = "100 First Street"
+                Address = "Demo Address 05"
             };
 
             var newClient = new Customer
             {
                 Name = "New Client",
                 Email = "new@example.com",
-                Address = "200 Second Street"
+                Address = "Demo Address 06"
             };
 
             context.Customers.AddRange(originalClient, newClient);
@@ -185,7 +185,7 @@ namespace SiteActionLedger.Tests
             var project = new Project
             {
                 Name = "New Construction",
-                SiteAddress = "600 Project Road",
+                SiteAddress = "Demo Site 06",
                 CustomerId = originalClient.Id
             };
 

@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 
-namespace SiteActionLedger.Controllers
+namespace SiteActionTrace.Controllers
 {
     public class TechniciansController : Controller
     {
-        private readonly SiteActionLedgerContext _context;
+        private readonly SiteActionTraceContext _context;
 
-        public TechniciansController(SiteActionLedgerContext context)
+        public TechniciansController(SiteActionTraceContext context)
         {
             _context = context;
         }

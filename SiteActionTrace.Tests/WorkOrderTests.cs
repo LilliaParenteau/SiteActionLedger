@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Controllers;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Controllers;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 using Xunit;
 
-namespace SiteActionLedger.Tests
+namespace SiteActionTrace.Tests
 {
     public class WorkOrderTests
     {
-        private static SiteActionLedgerContext CreateContext(
+        private static SiteActionTraceContext CreateContext(
             SqliteConnection connection)
         {
-            var options = new DbContextOptionsBuilder<SiteActionLedgerContext>()
+            var options = new DbContextOptionsBuilder<SiteActionTraceContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            var context = new SiteActionLedgerContext(options);
+            var context = new SiteActionTraceContext(options);
 
             context.Database.EnsureCreated();
 
@@ -34,14 +34,14 @@ namespace SiteActionLedger.Tests
 
             var customer = new Customer
             {
-                Name = "Harbor Construction",
+                Name = "Demo Client A",
                 Email = "harbor@example.com",
-                Address = "100 Main Street"
+                Address = "Demo Address 01"
             };
 
             var technician = new Technician
             {
-                Name = "Alex Morgan",
+                Name = "Demo Technician A",
                 Specialty = "Electrical"
             };
 
@@ -89,7 +89,7 @@ namespace SiteActionLedger.Tests
 
             var technician = new Technician
             {
-                Name = "Jordan Lee",
+                Name = "Demo Technician B",
                 Specialty = "Plumbing"
             };
 
@@ -116,9 +116,9 @@ namespace SiteActionLedger.Tests
 
             var customer = new Customer
             {
-                Name = "Coastal Builders",
+                Name = "Demo Client B",
                 Email = "coastal@example.com",
-                Address = "200 Main Street"
+                Address = "Demo Address 02"
             };
 
             context.Customers.Add(customer);
@@ -166,9 +166,9 @@ namespace SiteActionLedger.Tests
 
             var customer = new Customer
             {
-                Name = "Westside Contractors",
+                Name = "Demo Client C",
                 Email = "westside@example.com",
-                Address = "300 Main Street"
+                Address = "Demo Address 03"
             };
 
             context.Customers.Add(customer);
@@ -208,9 +208,9 @@ namespace SiteActionLedger.Tests
 
             var customer = new Customer
             {
-                Name = "Riverside Construction",
+                Name = "Demo Client D",
                 Email = "riverside@example.com",
-                Address = "400 Main Street"
+                Address = "Demo Address 04"
             };
 
             context.Customers.Add(customer);

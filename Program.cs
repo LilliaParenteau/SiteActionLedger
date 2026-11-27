@@ -1,12 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
-using  SiteActionLedger.Data;
+using  SiteActionTrace.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext< SiteActionLedgerContext>(options =>
+builder.Services.AddDbContext< SiteActionTraceContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();

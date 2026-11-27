@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SiteActionTrace.csproj" />
+  <Project Path="SiteActionTrace.Tests/SiteActionTrace.Tests.csproj" Id="bcaa5254-053e-489c-905b-2d04e50b4128" />
+</Solution>

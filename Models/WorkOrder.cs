@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SiteActionLedger.Models
+namespace SiteActionTrace.Models
 {
     public class WorkOrder
     {

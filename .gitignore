@@ -409,3 +409,8 @@ opspilot.db-wal
 siteactionledger.db
 siteactionledger.db-shm
 siteactionledger.db-wal
+
+# Site Action Trace database
+siteactiontrace.db
+siteactiontrace.db-shm
+siteactiontrace.db-wal

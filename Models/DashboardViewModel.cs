@@ -1,4 +1,4 @@
-﻿namespace SiteActionLedger.Models
+﻿namespace SiteActionTrace.Models
 {
     public class DashboardViewModel
     {

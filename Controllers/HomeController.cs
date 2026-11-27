@@ -1,16 +1,16 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 
-namespace SiteActionLedger.Controllers
+namespace SiteActionTrace.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SiteActionLedgerContext _context;
+        private readonly SiteActionTraceContext _context;
 
-        public HomeController(SiteActionLedgerContext context)
+        public HomeController(SiteActionTraceContext context)
         {
             _context = context;
         }

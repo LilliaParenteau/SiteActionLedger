@@ -15,8 +15,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Remove="SiteActionLedger.Tests/**/*.cs" />
-		<Content Remove="SiteActionLedger.Tests/**" />
+		<Compile Remove="SiteActionTrace.Tests/**/*.cs" />
+		<Content Remove="SiteActionTrace.Tests/**" />
 	</ItemGroup>
 
 </Project>

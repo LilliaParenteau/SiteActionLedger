@@ -7,40 +7,40 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
-using SiteActionLedger.Controllers;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Controllers;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 using Xunit;
 
-namespace SiteActionLedger.Tests
+namespace SiteActionTrace.Tests
 {
     public class WorkOrderCompletionTests
     {
-        private static SiteActionLedgerContext CreateContext(
+        private static SiteActionTraceContext CreateContext(
             SqliteConnection connection)
         {
-            var options = new DbContextOptionsBuilder<SiteActionLedgerContext>()
+            var options = new DbContextOptionsBuilder<SiteActionTraceContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            var context = new SiteActionLedgerContext(options);
+            var context = new SiteActionTraceContext(options);
             context.Database.EnsureCreated();
 
             return context;
         }
 
         private static async Task<(int OrderId, int IssueId)> AddWorkOrder(
-            SiteActionLedgerContext context,
+            SiteActionTraceContext context,
             string status,
             string? resolutionNotes = null,
             DateTime? completedAt = null)
         {
             var customer = new Customer
             {
-                Name = "Harbor Construction",
+                Name = "Demo Client A",
                 Email = "harbor@example.com",
                 Phone = "321-555-0142",
-                Address = "100 Main Street"
+                Address = "Demo Address 01"
             };
 
             context.Customers.Add(customer);
@@ -73,7 +73,7 @@ namespace SiteActionLedger.Tests
         }
 
         private static WorkOrdersController CreateController(
-            SiteActionLedgerContext context,
+            SiteActionTraceContext context,
             IServiceProvider services,
             string status,
             string? resolutionNotes)

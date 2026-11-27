@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 
-namespace SiteActionLedger.Controllers
+namespace SiteActionTrace.Controllers
 {
     public class WorkOrdersController : Controller
     {
-        private readonly SiteActionLedgerContext _context;
+        private readonly SiteActionTraceContext _context;
 
-        public WorkOrdersController(SiteActionLedgerContext context)
+        public WorkOrdersController(SiteActionTraceContext context)
         {
             _context = context;
         }

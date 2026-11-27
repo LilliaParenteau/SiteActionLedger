@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Models;
+using SiteActionTrace.Models;
 
-namespace SiteActionLedger.Data
+namespace SiteActionTrace.Data
 {
-    public class SiteActionLedgerContext : DbContext
+    public class SiteActionTraceContext : DbContext
     {
-        public SiteActionLedgerContext(
-            DbContextOptions<SiteActionLedgerContext> options)
+        public SiteActionTraceContext(
+            DbContextOptions<SiteActionTraceContext> options)
             : base(options)
         {
         }

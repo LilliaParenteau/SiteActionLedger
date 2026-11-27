@@ -8,37 +8,37 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
-using SiteActionLedger.Controllers;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Controllers;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 using Xunit;
 
-namespace SiteActionLedger.Tests
+namespace SiteActionTrace.Tests
 {
     public class WorkOrderNotesTests
     {
-        private static SiteActionLedgerContext CreateContext(
+        private static SiteActionTraceContext CreateContext(
             SqliteConnection connection)
         {
-            var options = new DbContextOptionsBuilder<SiteActionLedgerContext>()
+            var options = new DbContextOptionsBuilder<SiteActionTraceContext>()
                 .UseSqlite(connection)
                 .Options;
 
-            var context = new SiteActionLedgerContext(options);
+            var context = new SiteActionTraceContext(options);
             context.Database.EnsureCreated();
 
             return context;
         }
 
         private static async Task<SiteIssue> AddIssue(
-            SiteActionLedgerContext context)
+            SiteActionTraceContext context)
         {
             var customer = new Customer
             {
-                Name = "Harbor Construction",
+                Name = "Demo Client A",
                 Email = "harbor@example.com",
                 Phone = "321-555-0142",
-                Address = "100 Main Street"
+                Address = "Demo Address 01"
             };
 
             context.Customers.Add(customer);

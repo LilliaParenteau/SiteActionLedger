@@ -19,7 +19,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\SiteActionLedger.csproj" />
+		<ProjectReference Include="..\SiteActionTrace.csproj" />
 	</ItemGroup>
 
 </Project>

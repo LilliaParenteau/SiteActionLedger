@@ -1,11 +1,11 @@
-﻿@model SiteActionLedger.Models.Customer
+﻿@model SiteActionTrace.Models.Customer
 
 @{
     ViewData["Title"] = "Customer Details";
 
     var siteIssues = ViewBag.SiteIssues
-        as List<SiteActionLedger.Models.SiteIssue>
-        ?? new List<SiteActionLedger.Models.SiteIssue>();
+        as List<SiteActionTrace.Models.SiteIssue>
+        ?? new List<SiteActionTrace.Models.SiteIssue>();
 }
 
 <div class="mt-4">

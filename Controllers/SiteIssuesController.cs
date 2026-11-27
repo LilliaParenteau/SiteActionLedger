@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using SiteActionLedger.Data;
-using SiteActionLedger.Models;
+using SiteActionTrace.Data;
+using SiteActionTrace.Models;
 
-namespace SiteActionLedger.Controllers
+namespace SiteActionTrace.Controllers
 {
     public class SiteIssuesController : Controller
     {
-        private readonly SiteActionLedgerContext _context;
+        private readonly SiteActionTraceContext _context;
 
-        public SiteIssuesController(SiteActionLedgerContext context)
+        public SiteIssuesController(SiteActionTraceContext context)
         {
             _context = context;
         }

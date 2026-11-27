@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using  SiteActionLedger.Data;
+using  SiteActionTrace.Data;
 
 #nullable disable
 
-namespace  SiteActionLedger.Migrations
+namespace  SiteActionTrace.Migrations
 {
-    [DbContext(typeof( SiteActionLedgerContext))]
+    [DbContext(typeof( SiteActionTraceContext))]
     [Migration("20261118202737_AddProjects")]
     partial class AddProjects
     {
@@ -20,7 +20,7 @@ namespace  SiteActionLedger.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Customer", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Project", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("Projects", (string)null);
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.ServiceRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,7 +120,7 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Technician", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Technician", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,7 +145,7 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("Technician", (string)null);
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.WorkOrder", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.WorkOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,9 +179,9 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("WorkOrders");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Project", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Project", b =>
                 {
-                    b.HasOne(" SiteActionLedger.Models.Customer", "Customer")
+                    b.HasOne(" SiteActionTrace.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -190,9 +190,9 @@ namespace  SiteActionLedger.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.ServiceRequest", b =>
                 {
-                    b.HasOne(" SiteActionLedger.Models.Customer", "Customer")
+                    b.HasOne(" SiteActionTrace.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -201,15 +201,15 @@ namespace  SiteActionLedger.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.WorkOrder", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.WorkOrder", b =>
                 {
-                    b.HasOne(" SiteActionLedger.Models.ServiceRequest", "ServiceRequest")
+                    b.HasOne(" SiteActionTrace.Models.ServiceRequest", "ServiceRequest")
                         .WithOne()
-                        .HasForeignKey(" SiteActionLedger.Models.WorkOrder", "ServiceRequestId")
+                        .HasForeignKey(" SiteActionTrace.Models.WorkOrder", "ServiceRequestId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne(" SiteActionLedger.Models.Technician", "Technician")
+                    b.HasOne(" SiteActionTrace.Models.Technician", "Technician")
                         .WithMany()
                         .HasForeignKey("TechnicianId")
                         .OnDelete(DeleteBehavior.NoAction);

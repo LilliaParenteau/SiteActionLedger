@@ -1,13 +1,20 @@
-﻿# SiteActionLedger
+﻿# Site Action Trace
 
-SiteActionLedger is a construction site issue and corrective-action tracking application built with C# and ASP.NET Core MVC.
+Site Action Trace is a construction site issue and corrective-action tracking application built with C# and ASP.NET Core MVC.
 
 It connects construction projects, customers, site issues, technicians, and work orders to help manage reported problems and track corrective work through completion.
+
+## Project Motivation
+
+This project was inspired by my experience working for a construction and engineering company, where I worked with databases and assisted with cloud migration. I wanted to apply that experience to developing an application that connects construction projects, reported site issues, and corrective work through a relational database.
 
 ## Screenshots
 
 ### Dashboard
 ![Dashboard](Screenshots/dashboard.png)
+
+### Project Issue Summary
+![Project Issue Summary](Screenshots/dashboard-summary.png)
 
 ### Construction Projects
 ![Construction Projects](Screenshots/projects.png)
@@ -23,7 +30,7 @@ It connects construction projects, customers, site issues, technicians, and work
 - **Customer Management:** Create, view, edit, search, and manage customer records.
 - **Construction Projects:** Associate projects with customers, manage job site details, and track project statuses.
 - **Site Issue Tracking:** Report issues with categories, priorities, site locations, and descriptions.
-- **Search and Filtering:** Search site issues and work orders, with filters for status, priority, and category.
+- **Search and Filtering:** Search site issues and work orders, with status filters and additional priority and category filters for site issues.
 - **Work Orders:** Schedule corrective work, assign technicians, and track progress.
 - **Completion Tracking:** Require resolution notes, record completion dates, and synchronize work-order and site-issue statuses.
 - **Technician Management:** Manage technician information and assigned work orders.
@@ -46,26 +53,27 @@ It connects construction projects, customers, site issues, technicians, and work
 
 ### Requirements
 
-- .NET 10 SDK
+- .NET 10 SDK or a compatible newer SDK
+- .NET 10 ASP.NET Core runtime
 - Visual Studio with ASP.NET and web development support
 
 ### Setup
 
 1. Clone or download the repository.
-2. Open `SiteActionLedger.slnx` in Visual Studio.
+2. Open `SiteActionTrace.slnx` in Visual Studio.
 3. Restore NuGet packages if prompted.
 4. Open **Tools → NuGet Package Manager → Package Manager Console**.
-5. Select `SiteActionLedger` as the default project.
+5. Select `SiteActionTrace` as the default project.
 6. Run:
 
 ```powershell
 Update-Database
 ```
 
-7. Set `SiteActionLedger` as the startup project.
+7. Set `SiteActionTrace` as the startup project.
 8. Run the application using the HTTPS launch profile.
 
-The application uses a local SQLite database named `siteactionledger.db`, which is excluded from Git. A newly created database starts empty; records can be added through the application.
+The application uses a local SQLite database named `siteactiontrace.db`, which is excluded from Git. A newly created database starts empty; records can be added through the application.
 
 ## Automated Tests
 
@@ -74,7 +82,7 @@ The project includes 22 automated tests covering data relationships, validation,
 Run the tests through Visual Studio Test Explorer or:
 
 ```bash
-dotnet test SiteActionLedger.Tests/SiteActionLedger.Tests.csproj
+dotnet test SiteActionTrace.Tests/SiteActionTrace.Tests.csproj
 ```
 
 ## Example Workflow
@@ -94,9 +102,15 @@ dotnet test SiteActionLedger.Tests/SiteActionLedger.Tests.csproj
 - `Migrations/` — Database migrations
 - `Views/` — Razor views
 - `wwwroot/` — Styles and static assets
-- `SiteActionLedger.Tests/` — Automated tests
+- `SiteActionTrace.Tests/` — Automated tests
 - `Screenshots/` — Application screenshots
+
+## Demonstration Data
+
+The customers, projects, job sites, technicians, site issues, and work orders shown in the screenshots are fictional examples created for demonstration purposes. They are not intended to represent actual businesses, individuals, properties, or construction incidents.
 
 ## Project Scope
 
-SiteActionLedger is a locally run application demonstrating C# development, ASP.NET Core MVC, relational database design, CRUD operations, validation, and automated testing.
+Site Action Trace is a locally run application demonstrating C# development, ASP.NET Core MVC, relational database design, CRUD operations, validation, and automated testing.
+
+This is a personal project inspired by professional experience and is not affiliated with or endorsed by any current or former employer.

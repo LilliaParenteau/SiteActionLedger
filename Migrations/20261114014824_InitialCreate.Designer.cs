@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using  SiteActionLedger.Data;
+using  SiteActionTrace.Data;
 
 #nullable disable
 
-namespace  SiteActionLedger.Migrations
+namespace  SiteActionTrace.Migrations
 {
-    [DbContext(typeof( SiteActionLedgerContext))]
+    [DbContext(typeof( SiteActionTraceContext))]
     [Migration("20261114014824_InitialCreate")]
     partial class InitialCreate
     {
@@ -19,7 +19,7 @@ namespace  SiteActionLedger.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Customer", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

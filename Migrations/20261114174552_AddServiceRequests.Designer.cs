@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using  SiteActionLedger.Data;
+using  SiteActionTrace.Data;
 
 #nullable disable
 
-namespace  SiteActionLedger.Migrations
+namespace  SiteActionTrace.Migrations
 {
-    [DbContext(typeof( SiteActionLedgerContext))]
+    [DbContext(typeof( SiteActionTraceContext))]
     [Migration("20261114174552_AddServiceRequests")]
     partial class AddServiceRequests
     {
@@ -20,7 +20,7 @@ namespace  SiteActionLedger.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.15");
 
-            modelBuilder.Entity(" SiteActionLedger.Models.Customer", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.ServiceRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,9 +85,9 @@ namespace  SiteActionLedger.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity(" SiteActionLedger.Models.ServiceRequest", b =>
+            modelBuilder.Entity(" SiteActionTrace.Models.ServiceRequest", b =>
                 {
-                    b.HasOne(" SiteActionLedger.Models.Customer", "Customer")
+                    b.HasOne(" SiteActionTrace.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)

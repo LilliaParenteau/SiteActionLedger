@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace  SiteActionLedger.Migrations
+namespace  SiteActionTrace.Migrations
 {
     /// <inheritdoc />
     public partial class AddWorkOrders : Migration
