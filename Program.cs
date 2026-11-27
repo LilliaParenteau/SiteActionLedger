@@ -1,15 +1,35 @@
-
 using Microsoft.EntityFrameworkCore;
-using  SiteActionTrace.Data;
+using SiteActionTrace.Data;
 
-var builder = WebApplication.CreateBuilder(args);
+bool seedDemo = args.Contains("--seed-demo");
+
+var builder = WebApplication.CreateBuilder(
+    args.Where(arg => arg != "--seed-demo").ToArray());
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext< SiteActionTraceContext>(options =>
+builder.Services.AddDbContext<SiteActionTraceContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+
+if (seedDemo)
+{
+    using var scope = app.Services.CreateScope();
+
+    var context = scope.ServiceProvider
+        .GetRequiredService<SiteActionTraceContext>();
+
+    await context.Database.MigrateAsync();
+
+    bool initialized = await DemoData.InitializeAsync(context);
+
+    Console.WriteLine(initialized
+        ? "Demonstration data initialized successfully."
+        : "Database already contains records. No demonstration data was added.");
+
+    return;
+}
 
 if (!app.Environment.IsDevelopment())
 {
